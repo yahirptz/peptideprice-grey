@@ -1,0 +1,160 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Product {
+  id          Int      @id @default(autoincrement())
+  name        String
+  slug        String   @unique
+  description String?
+  dosage      String?
+  category    String?
+  
+  // Pricing (hidden from customers)
+  baseCost     Decimal  @db.Decimal(10, 2)  // What supplier charges
+  shippingCost Decimal  @db.Decimal(10, 2)  // Shipping from supplier
+  markupAmount Decimal  @db.Decimal(10, 2)  // Your profit
+  salePrice    Decimal  @db.Decimal(10, 2)  // What customer pays
+  
+  // Inventory
+  inStock       Boolean @default(true)
+  stockQuantity Int     @default(0)
+  
+  // Supplier Info (PRIVATE - never show customers)
+  supplierId           Int?
+  supplier             Supplier? @relation(fields: [supplierId], references: [id])
+  supplierProductCode  String?
+  
+  // Images
+  imageUrl     String?
+  imageAltText String?
+  
+  // SEO
+  metaTitle       String?
+  metaDescription String?
+  
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  orderItems OrderItem[]
+  
+  @@index([slug])
+  @@index([category])
+}
+
+model Supplier {
+  id              Int      @id @default(autoincrement())
+  name            String
+  telegramHandle  String?
+  telegramGroupId String?
+  contactMethod   String?
+  
+  // Shipping
+  shippingFrom     String?
+  avgShippingDays  Int?
+  shippingCostBase Decimal? @db.Decimal(10, 2)
+  
+  // Reliability Tracking
+  rating            Decimal? @db.Decimal(3, 2)
+  totalOrders       Int      @default(0)
+  successfulOrders  Int      @default(0)
+  
+  // Payment
+  paymentMethod  String?
+  paymentAddress String?
+  
+  notes    String?
+  isActive Boolean  @default(true)
+  createdAt DateTime @default(now())
+  
+  products       Product[]
+  orders         Order[]
+  supplierPrices SupplierPrice[]
+}
+
+model Order {
+  id          Int      @id @default(autoincrement())
+  orderNumber String   @unique
+  
+  // Customer Info
+  customerEmail   String
+  customerName    String?
+  shippingAddress String
+  shippingCity    String
+  shippingState   String?
+  shippingZip     String
+  shippingCountry String @default("US")
+  
+  // Pricing
+  subtotal        Decimal @db.Decimal(10, 2)
+  shippingCharged Decimal @db.Decimal(10, 2)
+  tax             Decimal @db.Decimal(10, 2)
+  total           Decimal @db.Decimal(10, 2)
+  
+  // Internal Costs (hidden from customer)
+  totalCost    Decimal @db.Decimal(10, 2)  // What you paid supplier
+  profit       Decimal @db.Decimal(10, 2)  // Your profit on order
+  
+  // Payment
+  paymentMethod    String?
+  paymentStatus    String  @default("pending")
+  stripePaymentId  String?
+  
+  // Fulfillment
+  orderStatus      String   @default("received")  // received, processing, shipped, delivered
+  supplierId       Int?
+  supplier         Supplier? @relation(fields: [supplierId], references: [id])
+  supplierOrderId  String?
+  trackingNumber   String?
+  
+  // Dates
+  orderedAt   DateTime  @default(now())
+  paidAt      DateTime?
+  shippedAt   DateTime?
+  deliveredAt DateTime?
+  
+  orderItems OrderItem[]
+  
+  @@index([orderNumber])
+  @@index([customerEmail])
+  @@index([orderStatus])
+}
+
+model OrderItem {
+  id        Int     @id @default(autoincrement())
+  orderId   Int
+  order     Order   @relation(fields: [orderId], references: [id])
+  productId Int
+  product   Product @relation(fields: [productId], references: [id])
+  
+  quantity       Int
+  unitPrice      Decimal @db.Decimal(10, 2)  // Price customer paid
+  unitCost       Decimal @db.Decimal(10, 2)  // Cost from supplier
+  productName    String
+  productDosage  String?
+  
+  @@index([orderId])
+}
+
+model SupplierPrice {
+  id         Int      @id @default(autoincrement())
+  supplierId Int
+  supplier   Supplier @relation(fields: [supplierId], references: [id])
+  
+  productName        String
+  price              Decimal  @db.Decimal(10, 2)
+  shippingCost       Decimal  @db.Decimal(10, 2)
+  sourceType         String?   // telegram, website, etc
+  telegramMessageId  String?
+  notes              String?
+  timestamp          DateTime @default(now())
+  
+  @@index([supplierId, timestamp])
+  @@index([productName])
+}

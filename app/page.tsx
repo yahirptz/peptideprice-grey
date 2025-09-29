@@ -1,102 +1,160 @@
-import Image from "next/image";
+import Link from 'next/link';
+import { ShoppingCart, Shield, Truck, ChevronRight } from 'lucide-react';
 
 export default function Home() {
   return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+      {/* Navigation */}
+      <nav className="border-b border-slate-700/50 bg-slate-900/50 backdrop-blur">
+        <div className="container mx-auto px-4 py-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-2">
+              <div className="h-8 w-8 bg-gradient-to-br from-slate-500 to-slate-700 rounded-lg" />
+              <span className="text-xl font-bold text-white">
+                PeptidePrice <span className="text-slate-400">Grey</span>
+              </span>
+            </div>
+            
+            <div className="flex items-center space-x-6">
+              <Link href="/products" className="text-slate-300 hover:text-white transition">
+                Products
+              </Link>
+              <Link href="/cart" className="text-slate-300 hover:text-white transition">
+                <ShoppingCart className="h-5 w-5" />
+              </Link>
+            </div>
+          </div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
+      </nav>
+
+      {/* Hero Section */}
+      <div className="container mx-auto px-4 py-20">
+        <div className="max-w-4xl mx-auto text-center">
+          <div className="inline-block mb-4 px-4 py-2 bg-slate-800/50 border border-slate-700 rounded-full">
+            <span className="text-slate-400 text-sm">Research Peptides • Grey Market Pricing</span>
+          </div>
+          
+          <h1 className="text-6xl font-bold text-white mb-6">
+            Premium Research Peptides
+            <br />
+            <span className="bg-gradient-to-r from-slate-400 to-slate-600 bg-clip-text text-transparent">
+              At Grey Market Prices
+            </span>
+          </h1>
+          
+          <p className="text-xl text-slate-400 mb-8 max-w-2xl mx-auto">
+            High-quality peptides sourced directly from trusted suppliers. 
+            Best pricing, fast shipping, discreet packaging.
+          </p>
+          
+          <div className="flex items-center justify-center space-x-4">
+            <Link 
+              href="/products"
+              className="px-8 py-4 bg-white text-slate-900 rounded-lg font-semibold hover:bg-slate-100 transition inline-flex items-center"
+            >
+              Browse Products
+              <ChevronRight className="ml-2 h-5 w-5" />
+            </Link>
+            
+            <Link 
+              href="/about"
+              className="px-8 py-4 bg-slate-800 text-white rounded-lg font-semibold hover:bg-slate-700 transition border border-slate-700"
+            >
+              Learn More
+            </Link>
+          </div>
+        </div>
+      </div>
+
+      {/* Features */}
+      <div className="container mx-auto px-4 py-16">
+        <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+          <div className="bg-slate-800/30 border border-slate-700/50 p-8 rounded-xl backdrop-blur">
+            <div className="h-12 w-12 bg-slate-700/50 rounded-lg flex items-center justify-center mb-4">
+              <Truck className="h-6 w-6 text-slate-300" />
+            </div>
+            <h3 className="text-xl font-bold text-white mb-2">Fast Shipping</h3>
+            <p className="text-slate-400">
+              Orders processed within 24-48 hours. Discreet packaging, tracked delivery.
+            </p>
+          </div>
+          
+          <div className="bg-slate-800/30 border border-slate-700/50 p-8 rounded-xl backdrop-blur">
+            <div className="h-12 w-12 bg-slate-700/50 rounded-lg flex items-center justify-center mb-4">
+              <Shield className="h-6 w-6 text-slate-300" />
+            </div>
+            <h3 className="text-xl font-bold text-white mb-2">Quality Assured</h3>
+            <p className="text-slate-400">
+              Sourced from vetted suppliers. Third-party testing available on request.
+            </p>
+          </div>
+          
+          <div className="bg-slate-800/30 border border-slate-700/50 p-8 rounded-xl backdrop-blur">
+            <div className="h-12 w-12 bg-slate-700/50 rounded-lg flex items-center justify-center mb-4">
+              <ShoppingCart className="h-6 w-6 text-slate-300" />
+            </div>
+            <h3 className="text-xl font-bold text-white mb-2">Secure Checkout</h3>
+            <p className="text-slate-400">
+              Multiple payment options. Your information is encrypted and protected.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Popular Products Preview */}
+      <div className="container mx-auto px-4 py-16">
+        <div className="max-w-5xl mx-auto">
+          <h2 className="text-3xl font-bold text-white mb-8 text-center">
+            Popular Products
+          </h2>
+          
+          <div className="grid md:grid-cols-3 gap-6">
+            {/* Sample product cards - will be replaced with real data */}
+            {['Semaglutide 5mg', 'Tirzepatide 10mg', 'BPC-157 5mg'].map((product) => (
+              <div 
+                key={product}
+                className="bg-slate-800/30 border border-slate-700/50 rounded-xl p-6 hover:border-slate-600 transition backdrop-blur"
+              >
+                <div className="h-48 bg-slate-700/30 rounded-lg mb-4" />
+                <h3 className="text-lg font-semibold text-white mb-2">{product}</h3>
+                <p className="text-slate-400 text-sm mb-4">Research use only</p>
+                <Link 
+                  href="/products"
+                  className="block w-full py-2 px-4 bg-slate-700 text-white rounded-lg text-center hover:bg-slate-600 transition"
+                >
+                  View Details
+                </Link>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Disclaimer */}
+      <div className="container mx-auto px-4 py-16">
+        <div className="max-w-3xl mx-auto bg-slate-800/50 border border-slate-700 rounded-xl p-8 backdrop-blur">
+          <h3 className="text-lg font-bold text-white mb-4">⚠️ Important Disclaimer</h3>
+          <p className="text-slate-400 text-sm leading-relaxed">
+            All products sold on PeptidePrice Grey are intended for research purposes only. 
+            These products are NOT intended for human consumption, clinical use, or any 
+            FDA-approved application. By purchasing, you confirm you are 18+ years of age 
+            and understand the legal implications. We are not responsible for misuse of products.
+          </p>
+        </div>
+      </div>
+
+      {/* Footer */}
+      <footer className="border-t border-slate-700/50 bg-slate-900/50 backdrop-blur mt-20">
+        <div className="container mx-auto px-4 py-8">
+          <div className="flex items-center justify-between text-slate-400 text-sm">
+            <p>© 2025 PeptidePrice Grey. Research use only.</p>
+            <div className="flex space-x-6">
+              <Link href="/terms" className="hover:text-white transition">Terms</Link>
+              <Link href="/privacy" className="hover:text-white transition">Privacy</Link>
+              <Link href="/contact" className="hover:text-white transition">Contact</Link>
+            </div>
+          </div>
+        </div>
       </footer>
     </div>
   );
