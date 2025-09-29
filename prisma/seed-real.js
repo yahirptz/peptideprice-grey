@@ -120,7 +120,7 @@ async function main() {
 
 main()
   .catch((e) => {
-    console.error('❌ Error seeding database:', error);
+    console.error('❌ Error seeding database:', e);
     process.exit(1);
   })
   .finally(async () => {

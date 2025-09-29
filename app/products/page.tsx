@@ -1,3 +1,4 @@
+// Force rebuild - products should load now
 import Link from 'next/link';
 import { PrismaClient } from '@prisma/client';
 import CartButton from '@/components/CartButton';
