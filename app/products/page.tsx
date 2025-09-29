@@ -1,8 +1,8 @@
 import Link from 'next/link';
-import { Search } from 'lucide-react';
 import { PrismaClient } from '@prisma/client';
 import CartButton from '@/components/CartButton';
 import AddToCartButton from '@/components/AddToCartButton';
+import Image from 'next/image';
 
 const prisma = new PrismaClient();
 
@@ -29,7 +29,6 @@ async function getProducts() {
       },
     });
     
-    // Convert Decimal to number for client components
     return products.map(product => ({
       ...product,
       salePrice: Number(product.salePrice),
@@ -45,7 +44,6 @@ export default async function ProductsPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
-      {/* Navigation */}
       <nav className="border-b border-slate-700/50 bg-slate-900/50 backdrop-blur sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
@@ -67,7 +65,6 @@ export default async function ProductsPage() {
       </nav>
 
       <div className="container mx-auto px-4 py-12">
-        {/* Header */}
         <div className="mb-12">
           <h1 className="text-4xl font-bold text-white mb-4">Research Peptides</h1>
           <p className="text-slate-400 text-lg">
@@ -75,26 +72,25 @@ export default async function ProductsPage() {
           </p>
         </div>
 
-        {/* Product Count */}
         <div className="mb-6">
           <p className="text-slate-400">
             Showing <span className="text-white font-semibold">{products.length}</span> products
           </p>
         </div>
 
-        {/* Product Grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {products.map((product) => (
             <div
               key={product.id}
               className="bg-slate-800/30 border border-slate-700/50 rounded-xl overflow-hidden hover:border-slate-600 transition backdrop-blur group"
             >
-              {/* Product Image */}
               <div className="h-64 bg-gradient-to-br from-slate-700/50 to-slate-800/50 relative overflow-hidden">
                 {product.imageUrl ? (
-                  <img 
+                  <Image 
                     src={product.imageUrl} 
                     alt={product.name}
+                    width={400}
+                    height={400}
                     className="w-full h-full object-cover"
                   />
                 ) : (
@@ -124,7 +120,6 @@ export default async function ProductsPage() {
                 )}
               </div>
 
-              {/* Product Info */}
               <div className="p-6">
                 <div className="text-xs text-slate-500 uppercase tracking-wide mb-2">
                   {product.category}
@@ -171,7 +166,6 @@ export default async function ProductsPage() {
           </div>
         )}
 
-        {/* Disclaimer */}
         <div className="mt-16 bg-slate-800/50 border border-slate-700 rounded-xl p-6 backdrop-blur">
           <h3 className="text-sm font-bold text-white mb-2">⚠️ Research Use Only</h3>
           <p className="text-slate-400 text-sm">
@@ -181,7 +175,6 @@ export default async function ProductsPage() {
         </div>
       </div>
 
-      {/* Footer */}
       <footer className="border-t border-slate-700/50 bg-slate-900/50 backdrop-blur mt-20">
         <div className="container mx-auto px-4 py-8">
           <div className="flex items-center justify-between text-slate-400 text-sm">
