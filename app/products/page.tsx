@@ -1,4 +1,3 @@
-// Force rebuild - products should load now
 import Link from 'next/link';
 import { PrismaClient } from '@prisma/client';
 import CartButton from '@/components/CartButton';
@@ -8,6 +7,7 @@ import Image from 'next/image';
 const prisma = new PrismaClient();
 
 async function getProducts() {
+  console.log('DATABASE_URL:', process.env.DATABASE_URL?.substring(0, 40));
   try {
     const products = await prisma.product.findMany({
       where: {
@@ -29,6 +29,8 @@ async function getProducts() {
         name: 'asc',
       },
     });
+    
+    console.log('Products found:', products.length);
     
     return products.map(product => ({
       ...product,
