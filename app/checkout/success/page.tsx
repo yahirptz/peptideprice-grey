@@ -38,7 +38,7 @@ function SuccessContent() {
             </p>
 
             <p className="text-slate-400 mb-8">
-              We've received your order and will process it as soon as we confirm your payment.
+              We&apos;ve received your order and will process it as soon as we confirm your payment.
             </p>
 
             <div className="bg-slate-700/30 rounded-lg p-6 mb-8 text-left">
@@ -54,7 +54,7 @@ function SuccessContent() {
                   </div>
                   <div>
                     <strong className="text-white">Payment Confirmation</strong>
-                    <p className="text-sm text-slate-400">We'll verify your payment within 24 hours</p>
+                    <p className="text-sm text-slate-400">We&apos;ll verify your payment within 24 hours</p>
                   </div>
                 </div>
 
@@ -64,7 +64,7 @@ function SuccessContent() {
                   </div>
                   <div>
                     <strong className="text-white">Order Processing</strong>
-                    <p className="text-sm text-slate-400">We'll prepare your order for shipment</p>
+                    <p className="text-sm text-slate-400">We&apos;ll prepare your order for shipment</p>
                   </div>
                 </div>
 
@@ -74,7 +74,7 @@ function SuccessContent() {
                   </div>
                   <div>
                     <strong className="text-white">Shipping</strong>
-                    <p className="text-sm text-slate-400">You'll receive tracking information via email</p>
+                    <p className="text-sm text-slate-400">You&apos;ll receive tracking information via email</p>
                   </div>
                 </div>
 
@@ -95,8 +95,8 @@ function SuccessContent() {
                 <Mail className="h-5 w-5 text-blue-400 flex-shrink-0 mt-0.5" />
                 <div className="text-left">
                   <p className="text-blue-200 text-sm">
-                    <strong>Check your email!</strong> We've sent order confirmation to your email address.
-                    If you don't see it, check your spam folder.
+                    <strong>Check your email!</strong> We&apos;ve sent order confirmation to your email address.
+                    If you don&apos;t see it, check your spam folder.
                   </p>
                 </div>
               </div>

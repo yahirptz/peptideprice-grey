@@ -1,161 +1,152 @@
-import Link from 'next/link';
-import { ShoppingCart, Shield, Truck, ChevronRight } from 'lucide-react';
+'use client';
 
-export default function Home() {
+import { useSearchParams } from 'next/navigation';
+import Link from 'next/link';
+import { CheckCircle, Mail, Package } from 'lucide-react';
+import { Suspense } from 'react';
+
+function SuccessContent() {
+  const searchParams = useSearchParams();
+  const orderNumber = searchParams.get('order');
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
-      {/* Navigation */}
       <nav className="border-b border-slate-700/50 bg-slate-900/50 backdrop-blur">
         <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-2">
-              <div className="h-8 w-8 bg-gradient-to-br from-slate-500 to-slate-700 rounded-lg" />
-              <span className="text-xl font-bold text-white">
-                PeptidePrice <span className="text-slate-400">Grey</span>
-              </span>
-            </div>
-            
-            <div className="flex items-center space-x-6">
-              <Link href="/products" className="text-slate-300 hover:text-white transition">
-                Products
-              </Link>
-              <Link href="/cart" className="text-slate-300 hover:text-white transition">
-                <ShoppingCart className="h-5 w-5" />
-              </Link>
-            </div>
-          </div>
+          <Link href="/" className="flex items-center space-x-2">
+            <div className="h-8 w-8 bg-gradient-to-br from-slate-500 to-slate-700 rounded-lg" />
+            <span className="text-xl font-bold text-white">
+              PeptidePrice <span className="text-slate-400">Grey</span>
+            </span>
+          </Link>
         </div>
       </nav>
 
-      {/* Hero Section */}
-      <div className="container mx-auto px-4 py-20">
-        <div className="max-w-4xl mx-auto text-center">
-          <div className="inline-block mb-4 px-4 py-2 bg-slate-800/50 border border-slate-700 rounded-full">
-            <span className="text-slate-400 text-sm">Research Peptides • Grey Market Pricing</span>
-          </div>
-          
-          <h1 className="text-6xl font-bold text-white mb-6">
-            Premium Research Peptides
-            <br />
-            <span className="bg-gradient-to-r from-slate-400 to-slate-600 bg-clip-text text-transparent">
-              At Grey Market Prices
-            </span>
-          </h1>
-          
-          <p className="text-xl text-slate-400 mb-8 max-w-2xl mx-auto">
-            High-quality peptides sourced directly from trusted suppliers. 
-            Best pricing, fast shipping, discreet packaging.
-          </p>
-          
-          <div className="flex items-center justify-center space-x-4">
-            <Link 
-              href="/products"
-              className="px-8 py-4 bg-white text-slate-900 rounded-lg font-semibold hover:bg-slate-100 transition inline-flex items-center"
-            >
-              Browse Products
-              <ChevronRight className="ml-2 h-5 w-5" />
-            </Link>
+      <div className="container mx-auto px-4 py-16">
+        <div className="max-w-2xl mx-auto">
+          <div className="bg-slate-800/30 border border-slate-700/50 rounded-xl p-8 backdrop-blur text-center">
+            <div className="mb-6">
+              <CheckCircle className="h-20 w-20 text-green-500 mx-auto" />
+            </div>
+
+            <h1 className="text-3xl font-bold text-white mb-4">
+              Order Received!
+            </h1>
             
-            <Link 
-              href="/about"
-              className="px-8 py-4 bg-slate-800 text-white rounded-lg font-semibold hover:bg-slate-700 transition border border-slate-700"
-            >
-              Learn More
-            </Link>
-          </div>
-        </div>
-      </div>
+            <p className="text-xl text-slate-300 mb-2">
+              Order Number: <span className="font-mono text-green-400">{orderNumber}</span>
+            </p>
 
-      {/* Features */}
-      <div className="container mx-auto px-4 py-16">
-        <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-          <div className="bg-slate-800/30 border border-slate-700/50 p-8 rounded-xl backdrop-blur">
-            <div className="h-12 w-12 bg-slate-700/50 rounded-lg flex items-center justify-center mb-4">
-              <Truck className="h-6 w-6 text-slate-300" />
-            </div>
-            <h3 className="text-xl font-bold text-white mb-2">Fast Shipping</h3>
-            <p className="text-slate-400">
-              Orders processed within 24-48 hours. Discreet packaging, tracked delivery.
+            <p className="text-slate-400 mb-8">
+              We&apos;ve received your order and will process it as soon as we confirm your payment.
             </p>
-          </div>
-          
-          <div className="bg-slate-800/30 border border-slate-700/50 p-8 rounded-xl backdrop-blur">
-            <div className="h-12 w-12 bg-slate-700/50 rounded-lg flex items-center justify-center mb-4">
-              <Shield className="h-6 w-6 text-slate-300" />
-            </div>
-            <h3 className="text-xl font-bold text-white mb-2">Quality Assured</h3>
-            <p className="text-slate-400">
-              Sourced from vetted suppliers. Third-party testing available on request.
-            </p>
-          </div>
-          
-          <div className="bg-slate-800/30 border border-slate-700/50 p-8 rounded-xl backdrop-blur">
-            <div className="h-12 w-12 bg-slate-700/50 rounded-lg flex items-center justify-center mb-4">
-              <ShoppingCart className="h-6 w-6 text-slate-300" />
-            </div>
-            <h3 className="text-xl font-bold text-white mb-2">Secure Checkout</h3>
-            <p className="text-slate-400">
-              Multiple payment options. Your information is encrypted and protected.
-            </p>
-          </div>
-        </div>
-      </div>
 
-      {/* Popular Products Preview */}
-      <div className="container mx-auto px-4 py-16">
-        <div className="max-w-5xl mx-auto">
-          <h2 className="text-3xl font-bold text-white mb-8 text-center">
-            Popular Products
-          </h2>
-          
-          <div className="grid md:grid-cols-3 gap-6">
-            {/* Sample product cards - will be replaced with real data */}
-            {['Semaglutide 5mg', 'Tirzepatide 10mg', 'BPC-157 5mg'].map((product) => (
-              <div 
-                key={product}
-                className="bg-slate-800/30 border border-slate-700/50 rounded-xl p-6 hover:border-slate-600 transition backdrop-blur"
-              >
-                <div className="h-48 bg-slate-700/30 rounded-lg mb-4" />
-                <h3 className="text-lg font-semibold text-white mb-2">{product}</h3>
-                <p className="text-slate-400 text-sm mb-4">Research use only</p>
-                <Link 
-                  href="/products"
-                  className="block w-full py-2 px-4 bg-slate-700 text-white rounded-lg text-center hover:bg-slate-600 transition"
-                >
-                  View Details
-                </Link>
+            <div className="bg-slate-700/30 rounded-lg p-6 mb-8 text-left">
+              <h2 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                <Package className="h-5 w-5" />
+                What happens next?
+              </h2>
+              
+              <div className="space-y-3 text-slate-300">
+                <div className="flex gap-3">
+                  <div className="flex-shrink-0 w-6 h-6 bg-green-500/20 rounded-full flex items-center justify-center text-green-400 font-bold text-sm">
+                    1
+                  </div>
+                  <div>
+                    <strong className="text-white">Payment Confirmation</strong>
+                    <p className="text-sm text-slate-400">We&apos;ll verify your payment within 24 hours</p>
+                  </div>
+                </div>
+
+                <div className="flex gap-3">
+                  <div className="flex-shrink-0 w-6 h-6 bg-green-500/20 rounded-full flex items-center justify-center text-green-400 font-bold text-sm">
+                    2
+                  </div>
+                  <div>
+                    <strong className="text-white">Order Processing</strong>
+                    <p className="text-sm text-slate-400">We&apos;ll prepare your order for shipment</p>
+                  </div>
+                </div>
+
+                <div className="flex gap-3">
+                  <div className="flex-shrink-0 w-6 h-6 bg-green-500/20 rounded-full flex items-center justify-center text-green-400 font-bold text-sm">
+                    3
+                  </div>
+                  <div>
+                    <strong className="text-white">Shipping</strong>
+                    <p className="text-sm text-slate-400">You&apos;ll receive tracking information via email</p>
+                  </div>
+                </div>
+
+                <div className="flex gap-3">
+                  <div className="flex-shrink-0 w-6 h-6 bg-green-500/20 rounded-full flex items-center justify-center text-green-400 font-bold text-sm">
+                    4
+                  </div>
+                  <div>
+                    <strong className="text-white">Delivery</strong>
+                    <p className="text-sm text-slate-400">Your package arrives in 7-14 days</p>
+                  </div>
+                </div>
               </div>
-            ))}
+            </div>
+
+            <div className="bg-blue-500/10 border border-blue-500/30 rounded-lg p-4 mb-8">
+              <div className="flex items-start gap-3">
+                <Mail className="h-5 w-5 text-blue-400 flex-shrink-0 mt-0.5" />
+                <div className="text-left">
+                  <p className="text-blue-200 text-sm">
+                    <strong>Check your email!</strong> We&apos;ve sent order confirmation to your email address.
+                    If you don&apos;t see it, check your spam folder.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link
+                href="/products"
+                className="px-6 py-3 bg-white text-slate-900 rounded-lg font-semibold hover:bg-slate-100 transition"
+              >
+                Continue Shopping
+              </Link>
+              
+              <Link
+                href="/"
+                className="px-6 py-3 bg-slate-700 text-white rounded-lg font-semibold hover:bg-slate-600 transition"
+              >
+                Back to Home
+              </Link>
+            </div>
           </div>
-        </div>
-      </div>
 
-      {/* Disclaimer */}
-      <div className="container mx-auto px-4 py-16">
-        <div className="max-w-3xl mx-auto bg-slate-800/50 border border-slate-700 rounded-xl p-8 backdrop-blur">
-          <h3 className="text-lg font-bold text-white mb-4">⚠️ Important Disclaimer</h3>
-          <p className="text-slate-400 text-sm leading-relaxed">
-            All products sold on PeptidePrice Grey are intended for research purposes only. 
-            These products are NOT intended for human consumption, clinical use, or any 
-            FDA-approved application. By purchasing, you confirm you are 18+ years of age 
-            and understand the legal implications. We are not responsible for misuse of products.
-          </p>
-        </div>
-      </div>
-
-      {/* Footer */}
-      <footer className="border-t border-slate-700/50 bg-slate-900/50 backdrop-blur mt-20">
-        <div className="container mx-auto px-4 py-8">
-          <div className="flex items-center justify-between text-slate-400 text-sm">
-            <p>© 2025 PeptidePrice Grey. Research use only.</p>
-            <div className="flex space-x-6">
-              <Link href="/terms" className="hover:text-white transition">Terms</Link>
-              <Link href="/privacy" className="hover:text-white transition">Privacy</Link>
-              <Link href="/contact" className="hover:text-white transition">Contact</Link>
+          <div className="mt-8 bg-slate-800/30 border border-slate-700/50 rounded-xl p-6 backdrop-blur">
+            <h3 className="text-lg font-bold text-white mb-3">Need Help?</h3>
+            <p className="text-slate-400 text-sm mb-4">
+              If you have any questions about your order, please contact us with your order number.
+            </p>
+            <div className="flex gap-4">
+              <Link
+                href="/contact"
+                className="text-green-400 hover:text-green-300 text-sm font-semibold transition"
+              >
+                Contact Support →
+              </Link>
             </div>
           </div>
         </div>
-      </footer>
+      </div>
     </div>
+  );
+}
+
+export default function CheckoutSuccessPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center">
+        <div className="text-white">Loading...</div>
+      </div>
+    }>
+      <SuccessContent />
+    </Suspense>
   );
 }
