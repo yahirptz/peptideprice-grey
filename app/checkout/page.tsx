@@ -31,9 +31,8 @@ export default function CheckoutPage() {
   const shipping = 15.00;
   const total = subtotal + shipping;
 
-  // YOUR PAYMENT ADDRESSES - UPDATE THESE!
   const paymentAddresses = {
-    crypto: 'bc1q386fzfnhgx6cajdflvqw63cngpk4g7nahmf23x', // Bitcoin, USDC, etc.
+    crypto: 'bc1q386fzfnhgx6cajdflvqw63cngpk4g7nahmf23x',
     zelle: 'Yahir.perezt70@gmail.com',
     cashapp: '$YahirPV',
   };
@@ -54,7 +53,6 @@ export default function CheckoutPage() {
   const handleSubmitOrder = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Validation
     if (!formData.customerName || !formData.customerEmail || !formData.shippingAddress) {
       alert('Please fill in all required fields');
       return;
@@ -68,7 +66,6 @@ export default function CheckoutPage() {
     setIsProcessing(true);
 
     try {
-      // Create order in database
       const response = await fetch('/api/orders/create', {
         method: 'POST',
         headers: {
@@ -89,11 +86,7 @@ export default function CheckoutPage() {
       }
 
       const order = await response.json();
-
-      // Clear cart
       clearCart();
-
-      // Redirect to success page
       router.push(`/checkout/success?order=${order.orderNumber}`);
     } catch (error) {
       console.error('Order error:', error);
@@ -170,7 +163,6 @@ export default function CheckoutPage() {
         <form onSubmit={handleSubmitOrder}>
           <div className="grid lg:grid-cols-3 gap-8">
             <div className="lg:col-span-2 space-y-6">
-              {/* Shipping Information */}
               <div className="bg-slate-800/30 border border-slate-700/50 rounded-xl p-6 backdrop-blur">
                 <h2 className="text-xl font-bold text-white mb-6">Shipping Information</h2>
                 
@@ -271,7 +263,6 @@ export default function CheckoutPage() {
                 </div>
               </div>
 
-              {/* Payment Method */}
               <div className="bg-slate-800/30 border border-slate-700/50 rounded-xl p-6 backdrop-blur">
                 <h2 className="text-xl font-bold text-white mb-6">Payment Method</h2>
                 
@@ -325,13 +316,12 @@ export default function CheckoutPage() {
                   </button>
                 </div>
 
-                {/* Payment Instructions */}
                 <div className="bg-slate-700/30 rounded-lg p-4">
                   <h3 className="font-semibold text-white mb-3">Payment Instructions:</h3>
                   <div className="space-y-2 text-sm text-slate-300">
                     <p>1. Send <strong className="text-white">${total.toFixed(2)}</strong> to:</p>
                     <div className="flex items-center gap-2 bg-slate-800/50 p-3 rounded-lg">
-                      <code className="flex-1 text-green-400 font-mono">
+                      <code className="flex-1 text-green-400 font-mono break-all">
                         {paymentAddresses[paymentMethod]}
                       </code>
                       <button
@@ -347,13 +337,12 @@ export default function CheckoutPage() {
                       </button>
                     </div>
                     <p>2. Complete the form and submit your order</p>
-                    <p>3. We'll process your order within 24 hours after payment confirmation</p>
+                    <p>3. We&apos;ll process your order within 24 hours after payment confirmation</p>
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Order Summary */}
             <div className="lg:col-span-1">
               <div className="bg-slate-800/30 border border-slate-700/50 rounded-xl p-6 backdrop-blur sticky top-24">
                 <h2 className="text-xl font-bold text-white mb-6">Order Summary</h2>
