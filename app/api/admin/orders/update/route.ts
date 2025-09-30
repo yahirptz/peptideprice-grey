@@ -3,7 +3,15 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-async function sendStatusUpdateNotification(order: any, paymentStatus: string, orderStatus: string) {
+interface OrderUpdate {
+  orderNumber: string;
+  customerName: string;
+  customerEmail: string;
+  total: number;
+  paymentStatus: string;
+}
+
+async function sendStatusUpdateNotification(order: OrderUpdate, paymentStatus: string, orderStatus: string) {
   const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
   const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID;
 
@@ -70,7 +78,12 @@ export async function PATCH(request: NextRequest) {
       );
     }
 
-    const updateData: any = {};
+    const updateData: {
+      paymentStatus?: string;
+      paidAt?: Date;
+      orderStatus?: string;
+      shippedAt?: Date;
+    } = {};
     
     if (paymentStatus) {
       updateData.paymentStatus = paymentStatus;
@@ -91,7 +104,13 @@ export async function PATCH(request: NextRequest) {
       data: updateData,
     });
 
-    await sendStatusUpdateNotification(currentOrder, paymentStatus, orderStatus);
+    await sendStatusUpdateNotification({
+      orderNumber: currentOrder.orderNumber,
+      customerName: currentOrder.customerName || '',
+      customerEmail: currentOrder.customerEmail,
+      total: Number(currentOrder.total),
+      paymentStatus: currentOrder.paymentStatus,
+    }, paymentStatus, orderStatus);
 
     return NextResponse.json(updatedOrder);
   } catch (error) {

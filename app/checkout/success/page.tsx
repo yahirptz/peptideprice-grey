@@ -125,7 +125,7 @@ function SuccessContent() {
                   <div>
                     <strong className="text-white">Payment Confirmation</strong>
                     <p className="text-sm text-slate-400">
-                      We'll verify your payment within 24 hours
+                      We&apos;ll verify your payment within 24 hours
                     </p>
                   </div>
                 </div>
@@ -137,7 +137,7 @@ function SuccessContent() {
                   <div>
                     <strong className="text-white">Order Processing</strong>
                     <p className="text-sm text-slate-400">
-                      We'll forward your order to our supplier for fulfillment
+                      We&apos;ll forward your order to our supplier for fulfillment
                     </p>
                   </div>
                 </div>
@@ -149,7 +149,7 @@ function SuccessContent() {
                   <div>
                     <strong className="text-white">Shipping & Tracking</strong>
                     <p className="text-sm text-slate-400">
-                      You'll receive tracking information via email within 2-3 business days
+                      You&apos;ll receive tracking information via email within 2-3 business days
                     </p>
                   </div>
                 </div>
@@ -173,8 +173,8 @@ function SuccessContent() {
                 <Mail className="h-5 w-5 text-blue-400 flex-shrink-0 mt-0.5" />
                 <div className="text-left">
                   <p className="text-blue-200 text-sm">
-                    <strong>Check your email!</strong> We've sent order confirmation with your order number.
-                    If you don't see it, check your spam folder.
+                    <strong>Check your email!</strong> We&apos;ve sent order confirmation with your order number.
+                    If you don&apos;t see it, check your spam folder.
                   </p>
                 </div>
               </div>
@@ -196,7 +196,7 @@ function SuccessContent() {
 
           <div className="mt-6 bg-amber-500/10 border border-amber-500/30 rounded-lg p-4">
             <p className="text-amber-200 text-sm text-center">
-              <strong>Reminder:</strong> Your order won't be processed until payment is received with order number{' '}
+              <strong>Reminder:</strong> Your order won&apos;t be processed until payment is received with order number{' '}
               <span className="font-mono font-bold">{orderNumber}</span>
             </p>
           </div>

@@ -1,7 +1,12 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Package, Clock, CheckCircle, XCircle, DollarSign } from 'lucide-react';
+
+interface OrderItem {
+  productName: string;
+  quantity: number;
+  unitPrice: number;
+}
 
 interface Order {
   id: number;
@@ -14,15 +19,15 @@ interface Order {
   shippingZip: string;
   total: number;
   profit: number;
+  subtotal: number;
+  shippingCharged: number;
+  tax: number;
+  totalCost: number;
   paymentMethod: string;
   paymentStatus: string;
   orderStatus: string;
   orderedAt: string;
-  orderItems: Array<{
-    productName: string;
-    quantity: number;
-    unitPrice: number;
-  }>;
+  orderItems: OrderItem[];
 }
 
 export default function AdminOrdersPage() {
@@ -37,30 +42,29 @@ export default function AdminOrdersPage() {
   }, []);
 
   const fetchOrders = async () => {
-  try {
-    const response = await fetch('/api/admin/orders');
-    const data = await response.json();
-    // Convert Decimal values to numbers
-    const ordersWithNumbers = data.map((order: any) => ({
-      ...order,
-      total: Number(order.total),
-      profit: Number(order.profit),
-      subtotal: Number(order.subtotal),
-      shippingCharged: Number(order.shippingCharged),
-      tax: Number(order.tax),
-      totalCost: Number(order.totalCost),
-      orderItems: order.orderItems.map((item: any) => ({
-        ...item,
-        unitPrice: Number(item.unitPrice),
-      })),
-    }));
-    setOrders(ordersWithNumbers);
-  } catch (error) {
-    console.error('Failed to fetch orders:', error);
-  } finally {
-    setLoading(false);
-  }
-};
+    try {
+      const response = await fetch('/api/admin/orders');
+      const data = await response.json();
+      const ordersWithNumbers = data.map((order: Order) => ({
+        ...order,
+        total: Number(order.total),
+        profit: Number(order.profit),
+        subtotal: Number(order.subtotal || 0),
+        shippingCharged: Number(order.shippingCharged || 0),
+        tax: Number(order.tax || 0),
+        totalCost: Number(order.totalCost || 0),
+        orderItems: order.orderItems.map((item: OrderItem) => ({
+          ...item,
+          unitPrice: Number(item.unitPrice),
+        })),
+      }));
+      setOrders(ordersWithNumbers);
+    } catch (error) {
+      console.error('Failed to fetch orders:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const updateOrderStatus = async (orderId: number, paymentStatus: string, orderStatus: string) => {
     try {
@@ -222,7 +226,7 @@ export default function AdminOrdersPage() {
                   </div>
                 </div>
 
-                <div className="flex gap-4 items-center">
+                <div className="flex gap-4 items-center flex-wrap">
                   <div className="flex gap-2">
                     <span className="text-slate-400 text-sm">Payment:</span>
                     <span
