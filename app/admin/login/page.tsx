@@ -1,11 +1,14 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+// The import below caused an error, so the router logic is being replaced by window.location for compilation purposes.
+// import { useRouter } from 'next/navigation';
+// The import below caused an error, so the <Link> component is being replaced by <a> for compilation purposes.
+// import Link from 'next/link';
 import { Lock, AlertCircle } from 'lucide-react';
 
 export default function AdminLoginPage() {
-  const router = useRouter();
+  // const router = useRouter(); // Router hook removed for compilation
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -27,12 +30,13 @@ export default function AdminLoginPage() {
       const data = await response.json();
 
       if (response.ok) {
-        router.push('/admin/orders');
-        router.refresh();
+        // Temporary fix: using native JS redirection instead of Next.js router
+        window.location.href = '/admin/orders'; 
       } else {
         setError(data.error || 'Invalid password');
       }
-    } catch (err) {
+    } catch {
+      // The 'err' parameter was removed here to address the unused variable warning.
       setError('Login failed. Please try again.');
     } finally {
       setIsLoading(false);
@@ -96,6 +100,7 @@ export default function AdminLoginPage() {
         </div>
 
         <div className="text-center mt-6">
+          {/* Reverted to <a> to avoid the 'next/link' compilation error */}
           <a href="/" className="text-slate-400 hover:text-white transition text-sm">
             ← Back to Store
           </a>
