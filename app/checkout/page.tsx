@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { ShoppingBag, Wallet, DollarSign, Copy, Check, AlertCircle } from 'lucide-react';
 import { useCartStore } from '@/lib/cart-store';
+import PaymentMethods from '@/components/PaymentMethods';
 
 export default function CheckoutPage() {
   const router = useRouter();
@@ -51,7 +52,7 @@ export default function CheckoutPage() {
 
   const handleSubmitOrder = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!formData.customerName || !formData.customerEmail || !formData.shippingAddress) {
       alert('Please fill in all required fields');
       return;
@@ -115,10 +116,15 @@ export default function CheckoutPage() {
         <div className="grid lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2 space-y-6">
             <div className="bg-slate-800/30 border border-slate-700/50 rounded-xl p-6 backdrop-blur">
-              <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">
+              <h2 className="text-2xl font-bold text-white mb-4 flex items-center gap-2">
                 <Wallet className="h-6 w-6" />
                 Payment Method
               </h2>
+
+              <div className="mb-6">
+                <p className="text-slate-400 text-sm mb-4">We accept the following payment methods:</p>
+                <PaymentMethods />
+              </div>
 
               <div className="grid md:grid-cols-3 gap-4 mb-6">
                 <button

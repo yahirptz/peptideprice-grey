@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { ShoppingCart, Shield, Truck, ChevronRight } from 'lucide-react';
+import TrustBadges from '@/components/TrustBadges';
 
 export default function Home() {
   return (
@@ -23,6 +24,9 @@ export default function Home() {
               </Link>
               <Link href="/about" className="text-slate-300 hover:text-white transition">
                 About
+              </Link>
+              <Link href="/faq" className="text-slate-300 hover:text-white transition">
+                FAQ
               </Link>
               <Link href="/cart" className="text-slate-300 hover:text-white transition">
                 <ShoppingCart className="h-5 w-5" />
@@ -98,6 +102,13 @@ export default function Home() {
       </div>
 
       <div className="container mx-auto px-4 py-16">
+        <div className="max-w-6xl mx-auto">
+          <h2 className="text-2xl font-bold text-white text-center mb-8">Why Choose PeptidePrice Grey</h2>
+          <TrustBadges />
+        </div>
+      </div>
+
+      <div className="container mx-auto px-4 py-16">
         <div className="max-w-3xl mx-auto bg-slate-800/50 border border-slate-700 rounded-xl p-8 backdrop-blur">
           <h3 className="text-lg font-bold text-white mb-4">⚠️ Important Disclaimer</h3>
           <p className="text-slate-400 text-sm leading-relaxed">
@@ -117,6 +128,7 @@ export default function Home() {
               <Link href="/products" className="hover:text-white transition">Products</Link>
               <Link href="/supplies" className="hover:text-white transition">Supplies</Link>
               <Link href="/about" className="hover:text-white transition">About</Link>
+              <Link href="/faq" className="hover:text-white transition">FAQ</Link>
             </div>
           </div>
         </div>
