@@ -92,6 +92,7 @@ export default function SuppliesPage() {
                 <h3 className="text-xl font-bold text-white mb-2">{supply.name}</h3>
                 <p className="text-slate-400 text-sm mb-6">{supply.description}</p>
                 
+                <a
                   href={supply.amazonLink}
                   target="_blank"
                   rel="noopener noreferrer nofollow"
