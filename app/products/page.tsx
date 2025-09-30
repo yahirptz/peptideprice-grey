@@ -28,7 +28,7 @@ async function getProducts() {
         name: 'asc',
       },
     });
-    
+
     return products.map(product => ({
       ...product,
       salePrice: Number(product.salePrice),
@@ -52,14 +52,17 @@ export default async function ProductsPage() {
               <span className="text-xl font-bold text-white">
                 PeptidePrice <span className="text-slate-400">Grey</span>
               </span>
-              </Link>
-            <div className="flex items-center space-x-6"></div>
-             <Link href="/about" className="text-slate-300 hover:text-white transition">
-                 About
-               </Link>
+            </Link>
+
             <div className="flex items-center space-x-6">
               <Link href="/products" className="text-white font-semibold">
                 Products
+              </Link>
+              <Link href="/supplies" className="text-slate-300 hover:text-white transition">
+                Supplies
+              </Link>
+              <Link href="/about" className="text-slate-300 hover:text-white transition">
+                About
               </Link>
               <CartButton />
             </div>
@@ -89,8 +92,8 @@ export default async function ProductsPage() {
             >
               <div className="h-64 bg-gradient-to-br from-slate-700/50 to-slate-800/50 relative overflow-hidden">
                 {product.imageUrl ? (
-                  <Image 
-                    src={product.imageUrl} 
+                  <Image
+                    src={product.imageUrl}
                     alt={product.name}
                     width={400}
                     height={400}
@@ -103,13 +106,13 @@ export default async function ProductsPage() {
                     </div>
                   </div>
                 )}
-                
+
                 {!product.inStock && (
                   <div className="absolute top-4 right-4 bg-red-500/90 text-white px-3 py-1 rounded-full text-sm font-semibold">
                     Out of Stock
                   </div>
                 )}
-                
+
                 {product.inStock && (
                   <div className="absolute top-4 right-4 bg-green-500/90 text-white px-3 py-1 rounded-full text-sm font-semibold">
                     In Stock
@@ -127,15 +130,15 @@ export default async function ProductsPage() {
                 <div className="text-xs text-slate-500 uppercase tracking-wide mb-2">
                   {product.category}
                 </div>
-                
+
                 <h3 className="text-xl font-bold text-white mb-2 group-hover:text-slate-300 transition">
                   {product.name}
                 </h3>
-                
+
                 <p className="text-slate-400 text-sm mb-4 line-clamp-2">
                   {product.description}
                 </p>
-                
+
                 <div className="flex items-center justify-between mb-4">
                   <div>
                     <div className="text-2xl font-bold text-white">
@@ -154,7 +157,7 @@ export default async function ProductsPage() {
                   >
                     View Details
                   </Link>
-                  
+
                   <AddToCartButton product={product} inStock={product.inStock} />
                 </div>
               </div>
@@ -170,9 +173,9 @@ export default async function ProductsPage() {
         )}
 
         <div className="mt-16 bg-slate-800/50 border border-slate-700 rounded-xl p-6 backdrop-blur">
-          <h3 className="text-sm font-bold text-white mb-2">⚠️ Research Use Only</h3>
+          <h3 className="text-sm font-bold text-white mb-2">Research Use Only</h3>
           <p className="text-slate-400 text-sm">
-            All products are sold for research purposes only and are not intended for human consumption. 
+            All products are sold for research purposes only and are not intended for human consumption.
             By purchasing, you confirm you are 18+ and understand applicable regulations.
           </p>
         </div>
@@ -183,9 +186,9 @@ export default async function ProductsPage() {
           <div className="flex items-center justify-between text-slate-400 text-sm">
             <p>© 2025 PeptidePrice Grey. Research use only.</p>
             <div className="flex space-x-6">
-              <Link href="/terms" className="hover:text-white transition">Terms</Link>
-              <Link href="/privacy" className="hover:text-white transition">Privacy</Link>
-              <Link href="/contact" className="hover:text-white transition">Contact</Link>
+              <Link href="/products" className="hover:text-white transition">Products</Link>
+              <Link href="/supplies" className="hover:text-white transition">Supplies</Link>
+              <Link href="/about" className="hover:text-white transition">About</Link>
             </div>
           </div>
         </div>
