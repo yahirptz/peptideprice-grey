@@ -67,7 +67,7 @@ export default function AboutPage() {
               </p>
               <p className="leading-relaxed">
                 Orders are typically processed within 24-48 hours and shipped with tracking. 
-                Delivery times range from 7-14 business days depending on location.
+                Delivery times range from 7-28 business days depending on location.
               </p>
             </div>
 

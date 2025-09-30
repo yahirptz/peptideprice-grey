@@ -53,7 +53,9 @@ export default async function ProductsPage() {
                 PeptidePrice <span className="text-slate-400">Grey</span>
               </span>
             </Link>
-            
+             <Link href="/about" className="text-slate-300 hover:text-white transition">
+                 About
+               </Link>
             <div className="flex items-center space-x-6">
               <Link href="/products" className="text-white font-semibold">
                 Products
