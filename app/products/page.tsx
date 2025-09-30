@@ -83,6 +83,9 @@ export default function ProductsPage() {
               <Link href="/about" className="text-slate-300 hover:text-white transition">
                 About
               </Link>
+              <Link href="/faq" className="text-slate-300 hover:text-white transition">
+                FAQ
+              </Link>
               <CartButton />
             </div>
           </div>
@@ -198,8 +201,8 @@ export default function ProductsPage() {
                         <div className="text-2xl font-bold text-white">
                           ${product.salePrice.toFixed(2)}
                         </div>
-                        <div className="text-xs text-slate-500">
-                          {product.dosage} per vial
+                        <div className="text-xs text-slate-400">
+                          Per kit (10 vials of {product.dosage})
                         </div>
                       </div>
                     </div>
@@ -255,6 +258,7 @@ export default function ProductsPage() {
               <Link href="/products" className="hover:text-white transition">Products</Link>
               <Link href="/supplies" className="hover:text-white transition">Supplies</Link>
               <Link href="/about" className="hover:text-white transition">About</Link>
+              <Link href="/faq" className="hover:text-white transition">FAQ</Link>
             </div>
           </div>
         </div>
