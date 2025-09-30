@@ -1,6 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { LogOut } from 'lucide-react';
 
 interface OrderItem {
   productName: string;
@@ -31,6 +33,7 @@ interface Order {
 }
 
 export default function AdminOrdersPage() {
+  const router = useRouter();
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<'all' | 'pending' | 'paid' | 'shipped'>('all');
@@ -44,6 +47,10 @@ export default function AdminOrdersPage() {
   const fetchOrders = async () => {
     try {
       const response = await fetch('/api/admin/orders');
+      if (response.status === 401) {
+        router.push('/admin/login');
+        return;
+      }
       const data = await response.json();
       const ordersWithNumbers = data.map((order: Order) => ({
         ...order,
@@ -63,6 +70,16 @@ export default function AdminOrdersPage() {
       console.error('Failed to fetch orders:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleLogout = async () => {
+    try {
+      await fetch('/api/admin/auth/logout', { method: 'POST' });
+      router.push('/admin/login');
+      router.refresh();
+    } catch (error) {
+      console.error('Logout failed:', error);
     }
   };
 
@@ -107,9 +124,18 @@ export default function AdminOrdersPage() {
   return (
     <div className="min-h-screen bg-slate-900 text-white">
       <div className="container mx-auto px-4 py-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-2">Order Management</h1>
-          <p className="text-slate-400">Manage and track all orders</p>
+        <div className="mb-8 flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold mb-2">Order Management</h1>
+            <p className="text-slate-400">Manage and track all orders</p>
+          </div>
+          <button
+            onClick={handleLogout}
+            className="flex items-center gap-2 px-4 py-2 bg-red-500/20 hover:bg-red-500/30 border border-red-500/50 rounded-lg transition"
+          >
+            <LogOut className="h-4 w-4" />
+            Logout
+          </button>
         </div>
 
         <div className="grid grid-cols-2 md:grid-cols-6 gap-4 mb-8">
