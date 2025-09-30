@@ -12,7 +12,7 @@ const supabase = createClient(
 async function getProducts() {
   try {
     const { data: products, error } = await supabase
-      .from('"Product"')
+      .from('"product"')
       .select('id, name, slug, description, dosage, category, salePrice, inStock, stockQuantity, imageUrl')
       .eq('isActive', true)
       .order('name', { ascending: true });
