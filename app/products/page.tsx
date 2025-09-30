@@ -1,31 +1,38 @@
 import Link from 'next/link';
-import { createClient } from '@supabase/supabase-js';
+import { PrismaClient } from '@prisma/client';
 import CartButton from '@/components/CartButton';
 import AddToCartButton from '@/components/AddToCartButton';
 import Image from 'next/image';
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
+const prisma = new PrismaClient();
 
 async function getProducts() {
   try {
-    const { data: products, error } = await supabase
-      .from('product')
-      .select('id, name, slug, description, dosage, category, salePrice, inStock, stockQuantity, imageUrl')
-      .eq('isActive', true)
-      .order('name', { ascending: true });
-
-    if (error) {
-      console.error('Supabase error:', error);
-      return [];
-    }
-
-    return products?.map(product => ({
+    const products = await prisma.product.findMany({
+      where: {
+        isActive: true,
+      },
+      select: {
+        id: true,
+        name: true,
+        slug: true,
+        description: true,
+        dosage: true,
+        category: true,
+        salePrice: true,
+        inStock: true,
+        stockQuantity: true,
+        imageUrl: true,
+      },
+      orderBy: {
+        name: 'asc',
+      },
+    });
+    
+    return products.map(product => ({
       ...product,
       salePrice: Number(product.salePrice),
-    })) || [];
+    }));
   } catch (error) {
     console.error('Error loading products:', error);
     return [];
