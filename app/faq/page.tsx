@@ -183,7 +183,7 @@ export default function FAQPage() {
             <h3 className="text-lg font-bold text-blue-400 mb-3">Still have questions?</h3>
             <p className="text-blue-200 text-sm mb-4">
               If you couldn't find the answer you're looking for, feel free to reach out to our support team.
-              We're here to help with any questions about orders, products, or shipping.
+              We&apos;re here to help with any questions about orders, products, or shipping.
             </p>
             <p className="text-blue-300 text-sm">
               Include your order number for faster support.
