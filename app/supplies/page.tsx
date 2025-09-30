@@ -5,32 +5,37 @@ const supplies = [
   {
     name: 'Bacteriostatic Water 30ml',
     description: 'Sterile water for reconstitution. 0.9% benzyl alcohol preservative.',
-    amazonLink: 'https://amazon.com/your-affiliate-link-1',
+    amazonLink: 'https://amzn.to/42mdHPX',
   },
   {
     name: 'Insulin Syringes 31G (100 pack)',
     description: '1ml insulin syringes with 31 gauge needle. Sterile, single-use.',
-    amazonLink: 'https://amazon.com/your-affiliate-link-2',
+    amazonLink: 'https://amzn.to/3KmPx1H',
   },
   {
     name: 'Alcohol Prep Pads (200 pack)',
     description: 'Sterile 70% isopropyl alcohol prep pads for sanitization.',
-    amazonLink: 'https://amazon.com/your-affiliate-link-3',
+    amazonLink: 'https://amzn.to/3KmBaKL',
   },
   {
     name: 'Empty Sterile Vials 10ml',
     description: 'Glass vials with rubber stoppers for storage and mixing.',
-    amazonLink: 'https://amazon.com/your-affiliate-link-4',
+    amazonLink: 'https://amzn.to/3Ip05wF',
   },
   {
     name: 'Mini Fridge for Peptide Storage',
     description: 'Compact refrigerator for proper peptide storage at 2-8°C.',
-    amazonLink: 'https://amazon.com/your-affiliate-link-5',
+    amazonLink: 'https://amzn.to/48DJ7oM',
   },
   {
     name: 'Digital Scale 0.001g Precision',
     description: 'Milligram scale for accurate peptide measurement.',
-    amazonLink: 'https://amazon.com/your-affiliate-link-6',
+    amazonLink: 'https://amzn.to/3KODDxt',
+  },
+  {
+    name: 'Insulin Vial Organizer Case (15 Slots)',
+    description: 'Peptide travel case and vial protector. Fits standard 10ml vials. Case only (Blue).',
+    amazonLink: 'https://amzn.to/3WeraWn',
   },
 ];
 
@@ -57,6 +62,9 @@ export default function SuppliesPage() {
               <Link href="/about" className="text-slate-300 hover:text-white transition">
                 About
               </Link>
+              <Link href="/faq" className="text-slate-300 hover:text-white transition">
+                FAQ
+              </Link>
             </div>
           </div>
         </div>
@@ -72,7 +80,7 @@ export default function SuppliesPage() {
 
         <div className="bg-blue-500/10 border border-blue-500/30 rounded-xl p-4 mb-8">
           <p className="text-blue-200 text-sm">
-            <strong>Note:</strong> These research supplies are for research use only
+            <strong>Note:</strong> These are affiliate links to Amazon. We may earn a commission from purchases at no extra cost to you.
           </p>
         </div>
 
@@ -91,7 +99,6 @@ export default function SuppliesPage() {
               <div className="p-6">
                 <h3 className="text-xl font-bold text-white mb-2">{supply.name}</h3>
                 <p className="text-slate-400 text-sm mb-6">{supply.description}</p>
-                
                 <a
                   href={supply.amazonLink}
                   target="_blank"
@@ -123,6 +130,7 @@ export default function SuppliesPage() {
               <Link href="/products" className="hover:text-white transition">Products</Link>
               <Link href="/supplies" className="hover:text-white transition">Supplies</Link>
               <Link href="/about" className="hover:text-white transition">About</Link>
+              <Link href="/faq" className="hover:text-white transition">FAQ</Link>
             </div>
           </div>
         </div>
