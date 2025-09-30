@@ -3,120 +3,178 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-interface OrderUpdate {
-  orderNumber: string;
-  customerName: string;
-  customerEmail: string;
-  total: number;
-  paymentStatus: string;
+function generateOrderNumber() {
+  const timestamp = Date.now().toString(36).toUpperCase();
+  const random = Math.random().toString(36).substring(2, 6).toUpperCase();
+  return `ORD-${timestamp}-${random}`;
 }
 
-async function sendStatusUpdateNotification(order: OrderUpdate, paymentStatus: string, orderStatus: string) {
+interface OrderNotification {
+  orderNumber: string;
+  total: number;
+  profit: number;
+  customerName: string;
+  customerEmail: string;
+  shippingAddress: string;
+  shippingCity: string;
+  shippingState: string;
+  shippingZip: string;
+  paymentMethod: string;
+  orderItems: Array<{
+    productName: string;
+    quantity: number;
+    unitPrice: number;
+  }>;
+}
+
+async function sendTelegramNotification(order: OrderNotification) {
   const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
   const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID;
 
   if (!TELEGRAM_BOT_TOKEN || !TELEGRAM_CHAT_ID) {
+    console.log('Telegram not configured - skipping notification');
     return;
   }
 
-  let message = '';
-  
-  if (paymentStatus === 'paid' && order.paymentStatus === 'pending') {
-    message = `
-✅ *PAYMENT CONFIRMED*
+  const message = `
+🛍️ *NEW ORDER RECEIVED*
 
 📦 Order: \`${order.orderNumber}\`
-💰 Amount: $${order.total.toFixed(2)}
-👤 Customer: ${order.customerName}
+💰 Total: $${order.total.toFixed(2)}
+💵 Profit: $${order.profit.toFixed(2)}
 
-Status updated to: PAID
-Next step: Forward order to supplier
+👤 *Customer*
+Name: ${order.customerName}
+Email: ${order.customerEmail}
+
+📍 *Shipping*
+${order.shippingAddress}
+${order.shippingCity}, ${order.shippingState} ${order.shippingZip}
+
+💳 *Payment*
+Method: ${order.paymentMethod.toUpperCase()}
+Status: PENDING - Awaiting confirmation
+
+📋 *Items*
+${order.orderItems.map((item) => 
+  `• ${item.productName} x${item.quantity} - $${(item.unitPrice * item.quantity).toFixed(2)}`
+).join('\n')}
+
+⚠️ *Customer must include order number in payment note:*
+\`${order.orderNumber}\`
 `;
-  } else if (orderStatus === 'shipped') {
-    message = `
-📮 *ORDER SHIPPED*
 
-📦 Order: \`${order.orderNumber}\`
-👤 Customer: ${order.customerName}
-📧 Email: ${order.customerEmail}
-
-Remember to:
-- Send tracking number to customer
-- Update them via email
-`;
-  }
-
-  if (message) {
-    try {
-      await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          chat_id: TELEGRAM_CHAT_ID,
-          text: message,
-          parse_mode: 'Markdown',
-        }),
-      });
-    } catch (error) {
-      console.error('Failed to send Telegram notification:', error);
-    }
+  try {
+    await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        chat_id: TELEGRAM_CHAT_ID,
+        text: message,
+        parse_mode: 'Markdown',
+      }),
+    });
+  } catch (error) {
+    console.error('Failed to send Telegram notification:', error);
   }
 }
 
-export async function PATCH(request: NextRequest) {
+export async function POST(request: NextRequest) {
   try {
-    const { orderId, paymentStatus, orderStatus } = await request.json();
+    const body = await request.json();
+    const { customer, items, paymentMethod, subtotal, shipping, total } = body;
 
-    const currentOrder = await prisma.order.findUnique({
-      where: { id: orderId },
-    });
-
-    if (!currentOrder) {
+    if (!customer || !items || items.length === 0) {
       return NextResponse.json(
-        { error: 'Order not found' },
-        { status: 404 }
+        { error: 'Missing required fields' },
+        { status: 400 }
       );
     }
 
-    const updateData: {
-      paymentStatus?: string;
-      paidAt?: Date;
-      orderStatus?: string;
-      shippedAt?: Date;
-    } = {};
-    
-    if (paymentStatus) {
-      updateData.paymentStatus = paymentStatus;
-      if (paymentStatus === 'paid') {
-        updateData.paidAt = new Date();
+    const orderNumber = generateOrderNumber();
+
+    let totalCost = 0;
+    const orderItems = [];
+
+    for (const item of items) {
+      const product = await prisma.product.findUnique({
+        where: { id: item.id },
+        select: {
+          baseCost: true,
+          shippingCost: true,
+        },
+      });
+
+      if (!product) {
+        continue;
       }
-    }
-    
-    if (orderStatus) {
-      updateData.orderStatus = orderStatus;
-      if (orderStatus === 'shipped') {
-        updateData.shippedAt = new Date();
-      }
+
+      const unitCost = Number(product.baseCost) + Number(product.shippingCost);
+      totalCost += unitCost * item.quantity;
+
+      orderItems.push({
+        productId: item.id,
+        quantity: item.quantity,
+        unitPrice: item.price,
+        unitCost: unitCost,
+        productName: item.name,
+        productDosage: item.dosage || '',
+      });
     }
 
-    const updatedOrder = await prisma.order.update({
-      where: { id: orderId },
-      data: updateData,
+    const profit = total - totalCost;
+
+    const order = await prisma.order.create({
+      data: {
+        orderNumber,
+        customerEmail: customer.customerEmail,
+        customerName: customer.customerName,
+        shippingAddress: customer.shippingAddress,
+        shippingCity: customer.shippingCity,
+        shippingState: customer.shippingState || '',
+        shippingZip: customer.shippingZip,
+        shippingCountry: customer.shippingCountry,
+        subtotal,
+        shippingCharged: shipping,
+        tax: 0,
+        total,
+        totalCost,
+        profit,
+        paymentMethod,
+        paymentStatus: 'pending',
+        orderStatus: 'received',
+        orderItems: {
+          create: orderItems,
+        },
+      },
+      include: {
+        orderItems: true,
+      },
     });
 
-    await sendStatusUpdateNotification({
-      orderNumber: currentOrder.orderNumber,
-      customerName: currentOrder.customerName || '',
-      customerEmail: currentOrder.customerEmail,
-      total: Number(currentOrder.total),
-      paymentStatus: currentOrder.paymentStatus,
-    }, paymentStatus, orderStatus);
+    await sendTelegramNotification({
+      orderNumber: order.orderNumber,
+      total: Number(order.total),
+      profit: Number(order.profit),
+      customerName: order.customerName || '',
+      customerEmail: order.customerEmail,
+      shippingAddress: order.shippingAddress,
+      shippingCity: order.shippingCity,
+      shippingState: order.shippingState || '',
+      shippingZip: order.shippingZip,
+      paymentMethod: order.paymentMethod || '',
+      orderItems: order.orderItems.map(item => ({
+        productName: item.productName,
+        quantity: item.quantity,
+        unitPrice: Number(item.unitPrice),
+      })),
+    });
 
-    return NextResponse.json(updatedOrder);
+    return NextResponse.json(order);
   } catch (error) {
-    console.error('Error updating order:', error);
+    console.error('Error creating order:', error);
     return NextResponse.json(
-      { error: 'Failed to update order' },
+      { error: 'Failed to create order' },
       { status: 500 }
     );
   }

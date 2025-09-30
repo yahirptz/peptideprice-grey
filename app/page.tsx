@@ -75,7 +75,7 @@ export default function Home() {
             </div>
             <h3 className="text-xl font-bold text-white mb-2">Quality Assured</h3>
             <p className="text-slate-400">
-              Sourced from vetted suppliers. Third-party testing available on request.
+              Sourced from vetted suppliers. Third-party testing available on larger orders.
             </p>
           </div>
           
