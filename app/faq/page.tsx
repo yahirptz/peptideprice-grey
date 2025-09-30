@@ -8,7 +8,7 @@ export default function FAQPage() {
       questions: [
         {
           q: "What payment methods do you accept?",
-          a: "We accept Bitcoin (BTC), Zelle, and Cash App. These payment methods provide privacy and security for both parties. After placing your order, you'll receive payment instructions with your unique order number."
+          a: "We accept Bitcoin (BTC), Zelle, and Cash App. These payment methods provide privacy and security for both parties. After placing your order, you will receive payment instructions with your unique order number."
         },
         {
           q: "How do I know my payment was received?",
@@ -25,7 +25,7 @@ export default function FAQPage() {
       questions: [
         {
           q: "How long does shipping take?",
-          a: "Orders are processed within 24-48 hours after payment confirmation. Domestic shipping typically takes 7-14 business days. You'll receive tracking information via email once your order ships."
+          a: "Orders are processed within 24-48 hours after payment confirmation. Domestic shipping typically takes 7-14 business days. You will receive tracking information via email once your order ships."
         },
         {
           q: "Is shipping discreet?",
@@ -37,7 +37,7 @@ export default function FAQPage() {
         },
         {
           q: "What if my package is lost or damaged?",
-          a: "All orders include tracking. If your package shows as delivered but you haven't received it, contact us within 48 hours. For damaged packages, provide photos immediately and we'll work with you on a resolution."
+          a: "All orders include tracking. If your package shows as delivered but you have not received it, contact us within 48 hours. For damaged packages, provide photos immediately and we will work with you on a resolution."
         }
       ]
     },
@@ -182,8 +182,8 @@ export default function FAQPage() {
           <div className="mt-12 bg-blue-500/10 border border-blue-500/30 rounded-xl p-6">
             <h3 className="text-lg font-bold text-blue-400 mb-3">Still have questions?</h3>
             <p className="text-blue-200 text-sm mb-4">
-              If you couldn't find the answer you're looking for, feel free to reach out to our support team.
-              We&apos;re here to help with any questions about orders, products, or shipping.
+              If you could not find the answer you are looking for, feel free to reach out to our support team.
+              We are here to help with any questions about orders, products, or shipping.
             </p>
             <p className="text-blue-300 text-sm">
               Include your order number for faster support.
