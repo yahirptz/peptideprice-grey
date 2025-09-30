@@ -52,7 +52,8 @@ export default async function ProductsPage() {
               <span className="text-xl font-bold text-white">
                 PeptidePrice <span className="text-slate-400">Grey</span>
               </span>
-            </Link>
+              </Link>
+            <div className="flex items-center space-x-6"></div>
              <Link href="/about" className="text-slate-300 hover:text-white transition">
                  About
                </Link>
