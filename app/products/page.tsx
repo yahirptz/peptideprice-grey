@@ -1,46 +1,65 @@
+'use client';
+
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { PrismaClient } from '@prisma/client';
 import CartButton from '@/components/CartButton';
 import AddToCartButton from '@/components/AddToCartButton';
 import Image from 'next/image';
+import { Search, X } from 'lucide-react';
 
-const prisma = new PrismaClient();
-
-async function getProducts() {
-  try {
-    const products = await prisma.product.findMany({
-      where: {
-        isActive: true,
-      },
-      select: {
-        id: true,
-        name: true,
-        slug: true,
-        description: true,
-        dosage: true,
-        category: true,
-        salePrice: true,
-        inStock: true,
-        stockQuantity: true,
-        imageUrl: true,
-      },
-      orderBy: {
-        name: 'asc',
-      },
-    });
-
-    return products.map(product => ({
-      ...product,
-      salePrice: Number(product.salePrice),
-    }));
-  } catch (error) {
-    console.error('Error loading products:', error);
-    return [];
-  }
+interface Product {
+  id: number;
+  name: string;
+  slug: string;
+  description: string | null;
+  dosage: string | null;
+  category: string | null;
+  salePrice: number;
+  inStock: boolean;
+  stockQuantity: number;
+  imageUrl: string | null;
 }
 
-export default async function ProductsPage() {
-  const products = await getProducts();
+export default function ProductsPage() {
+  const [products, setProducts] = useState<Product[]>([]);
+  const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchProducts();
+  }, []);
+
+  useEffect(() => {
+    if (searchQuery.trim() === '') {
+      setFilteredProducts(products);
+    } else {
+      const query = searchQuery.toLowerCase();
+      const filtered = products.filter((product) =>
+        product.name.toLowerCase().includes(query) ||
+        product.description?.toLowerCase().includes(query) ||
+        product.category?.toLowerCase().includes(query)
+      );
+      setFilteredProducts(filtered);
+    }
+  }, [searchQuery, products]);
+
+  const fetchProducts = async () => {
+    try {
+      const response = await fetch('/api/products');
+      const data = await response.json();
+      setProducts(data);
+      setFilteredProducts(data);
+    } catch (error) {
+      console.error('Error loading products:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const clearSearch = () => {
+    setSearchQuery('');
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
@@ -73,103 +92,150 @@ export default async function ProductsPage() {
       <div className="container mx-auto px-4 py-12">
         <div className="mb-12">
           <h1 className="text-4xl font-bold text-white mb-4">Research Peptides</h1>
-          <p className="text-slate-400 text-lg">
+          <p className="text-slate-400 text-lg mb-8">
             Browse our catalog of premium research peptides at competitive grey market prices
           </p>
-        </div>
 
-        <div className="mb-6">
-          <p className="text-slate-400">
-            Showing <span className="text-white font-semibold">{products.length}</span> products
-          </p>
-        </div>
-
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {products.map((product) => (
-            <div
-              key={product.id}
-              className="bg-slate-800/30 border border-slate-700/50 rounded-xl overflow-hidden hover:border-slate-600 transition backdrop-blur group"
-            >
-              <div className="h-64 bg-gradient-to-br from-slate-700/50 to-slate-800/50 relative overflow-hidden">
-                {product.imageUrl ? (
-                  <Image
-                    src={product.imageUrl}
-                    alt={product.name}
-                    width={400}
-                    height={400}
-                    className="w-full h-full object-cover"
-                  />
-                ) : (
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="text-6xl font-bold text-slate-600/30">
-                      {product.name.charAt(0)}
-                    </div>
-                  </div>
-                )}
-
-                {!product.inStock && (
-                  <div className="absolute top-4 right-4 bg-red-500/90 text-white px-3 py-1 rounded-full text-sm font-semibold">
-                    Out of Stock
-                  </div>
-                )}
-
-                {product.inStock && (
-                  <div className="absolute top-4 right-4 bg-green-500/90 text-white px-3 py-1 rounded-full text-sm font-semibold">
-                    In Stock
-                  </div>
-                )}
-
-                {product.stockQuantity > 0 && product.stockQuantity < 10 && (
-                  <div className="absolute top-4 left-4 bg-orange-500/90 text-white px-3 py-1 rounded-full text-xs font-semibold">
-                    Only {product.stockQuantity} left!
-                  </div>
-                )}
-              </div>
-
-              <div className="p-6">
-                <div className="text-xs text-slate-500 uppercase tracking-wide mb-2">
-                  {product.category}
-                </div>
-
-                <h3 className="text-xl font-bold text-white mb-2 group-hover:text-slate-300 transition">
-                  {product.name}
-                </h3>
-
-                <p className="text-slate-400 text-sm mb-4 line-clamp-2">
-                  {product.description}
-                </p>
-
-                <div className="flex items-center justify-between mb-4">
-                  <div>
-                    <div className="text-2xl font-bold text-white">
-                      ${product.salePrice.toFixed(2)}
-                    </div>
-                    <div className="text-xs text-slate-500">
-                      {product.dosage} per vial
-                    </div>
-                  </div>
-                </div>
-
-                <div className="flex gap-2">
-                  <Link
-                    href={`/products/${product.slug}`}
-                    className="flex-1 py-2 px-4 bg-slate-700 text-white rounded-lg text-center hover:bg-slate-600 transition text-sm font-semibold"
-                  >
-                    View Details
-                  </Link>
-
-                  <AddToCartButton product={product} inStock={product.inStock} />
-                </div>
-              </div>
+          <div className="max-w-2xl relative">
+            <div className="relative">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400" />
+              <input
+                type="text"
+                placeholder="Search peptides by name, category, or description..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-12 pr-12 py-4 bg-slate-800/50 border border-slate-700 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-transparent transition"
+              />
+              {searchQuery && (
+                <button
+                  onClick={clearSearch}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white transition"
+                >
+                  <X className="h-5 w-5" />
+                </button>
+              )}
             </div>
-          ))}
+
+            {searchQuery && (
+              <div className="mt-4 text-slate-400 text-sm">
+                Found <span className="text-white font-semibold">{filteredProducts.length}</span> result
+                {filteredProducts.length !== 1 ? 's' : ''} for &quot;{searchQuery}&quot;
+              </div>
+            )}
+          </div>
         </div>
 
-        {products.length === 0 && (
-          <div className="text-center py-16 bg-slate-800/30 border border-slate-700 rounded-xl">
-            <p className="text-slate-400 text-lg mb-2">No products found</p>
-            <p className="text-slate-500 text-sm">Check back soon for new arrivals</p>
+        {loading ? (
+          <div className="text-center py-16">
+            <div className="text-slate-400 text-lg">Loading products...</div>
           </div>
+        ) : (
+          <>
+            <div className="mb-6">
+              <p className="text-slate-400">
+                Showing <span className="text-white font-semibold">{filteredProducts.length}</span> product
+                {filteredProducts.length !== 1 ? 's' : ''}
+              </p>
+            </div>
+
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filteredProducts.map((product) => (
+                <div
+                  key={product.id}
+                  className="bg-slate-800/30 border border-slate-700/50 rounded-xl overflow-hidden hover:border-slate-600 transition backdrop-blur group"
+                >
+                  <div className="h-64 bg-gradient-to-br from-slate-700/50 to-slate-800/50 relative overflow-hidden">
+                    {product.imageUrl ? (
+                      <Image
+                        src={product.imageUrl}
+                        alt={product.name}
+                        width={400}
+                        height={400}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <div className="text-6xl font-bold text-slate-600/30">
+                          {product.name.charAt(0)}
+                        </div>
+                      </div>
+                    )}
+
+                    {!product.inStock && (
+                      <div className="absolute top-4 right-4 bg-red-500/90 text-white px-3 py-1 rounded-full text-sm font-semibold">
+                        Out of Stock
+                      </div>
+                    )}
+
+                    {product.inStock && (
+                      <div className="absolute top-4 right-4 bg-green-500/90 text-white px-3 py-1 rounded-full text-sm font-semibold">
+                        In Stock
+                      </div>
+                    )}
+
+                    {product.stockQuantity > 0 && product.stockQuantity < 10 && (
+                      <div className="absolute top-4 left-4 bg-orange-500/90 text-white px-3 py-1 rounded-full text-xs font-semibold">
+                        Only {product.stockQuantity} left!
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="p-6">
+                    <div className="text-xs text-slate-500 uppercase tracking-wide mb-2">
+                      {product.category}
+                    </div>
+
+                    <h3 className="text-xl font-bold text-white mb-2 group-hover:text-slate-300 transition">
+                      {product.name}
+                    </h3>
+
+                    <p className="text-slate-400 text-sm mb-4 line-clamp-2">
+                      {product.description}
+                    </p>
+
+                    <div className="flex items-center justify-between mb-4">
+                      <div>
+                        <div className="text-2xl font-bold text-white">
+                          ${product.salePrice.toFixed(2)}
+                        </div>
+                        <div className="text-xs text-slate-500">
+                          {product.dosage} per vial
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="flex gap-2">
+                      <Link
+                        href={`/products/${product.slug}`}
+                        className="flex-1 py-2 px-4 bg-slate-700 text-white rounded-lg text-center hover:bg-slate-600 transition text-sm font-semibold"
+                      >
+                        View Details
+                      </Link>
+
+                      <AddToCartButton product={product} inStock={product.inStock} />
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {filteredProducts.length === 0 && (
+              <div className="text-center py-16 bg-slate-800/30 border border-slate-700 rounded-xl">
+                <p className="text-slate-400 text-lg mb-2">No products found</p>
+                <p className="text-slate-500 text-sm mb-4">
+                  Try adjusting your search terms
+                </p>
+                {searchQuery && (
+                  <button
+                    onClick={clearSearch}
+                    className="px-6 py-2 bg-slate-700 text-white rounded-lg hover:bg-slate-600 transition"
+                  >
+                    Clear Search
+                  </button>
+                )}
+              </div>
+            )}
+          </>
         )}
 
         <div className="mt-16 bg-slate-800/50 border border-slate-700 rounded-xl p-6 backdrop-blur">

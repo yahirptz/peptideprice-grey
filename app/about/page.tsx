@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { ShoppingCart } from 'lucide-react';
 
 export default function AboutPage() {
   return (
@@ -16,8 +17,14 @@ export default function AboutPage() {
               <Link href="/products" className="text-slate-300 hover:text-white transition">
                 Products
               </Link>
+              <Link href="/supplies" className="text-slate-300 hover:text-white transition">
+                Supplies
+              </Link>
               <Link href="/about" className="text-white font-semibold">
                 About
+              </Link>
+              <Link href="/cart" className="text-slate-300 hover:text-white transition">
+                <ShoppingCart className="h-5 w-5" />
               </Link>
             </div>
           </div>
@@ -67,7 +74,7 @@ export default function AboutPage() {
               </p>
               <p className="leading-relaxed">
                 Orders are typically processed within 24-48 hours and shipped with tracking. 
-                Delivery times range from 7-28 business days depending on location.
+                Delivery times range from 7-14 business days depending on location.
               </p>
             </div>
 
@@ -89,6 +96,7 @@ export default function AboutPage() {
             <p>© 2025 PeptidePrice Grey. Research use only.</p>
             <div className="flex space-x-6">
               <Link href="/products" className="hover:text-white transition">Products</Link>
+              <Link href="/supplies" className="hover:text-white transition">Supplies</Link>
               <Link href="/about" className="hover:text-white transition">About</Link>
             </div>
           </div>

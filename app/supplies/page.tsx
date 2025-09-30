@@ -72,7 +72,7 @@ export default function SuppliesPage() {
 
         <div className="bg-blue-500/10 border border-blue-500/30 rounded-xl p-4 mb-8">
           <p className="text-blue-200 text-sm">
-            <strong>Note:</strong> These are affiliate links to Amazon. We may earn a commission from purchases at no extra cost to you.
+            <strong>Note:</strong> These research supplies are for research use only
           </p>
         </div>
 

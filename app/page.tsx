@@ -13,13 +13,16 @@ export default function Home() {
                 PeptidePrice <span className="text-slate-400">Grey</span>
               </span>
             </div>
-            
+
             <div className="flex items-center space-x-6">
-               <Link href="/about" className="text-slate-300 hover:text-white transition">
-                 About
-              </Link>
               <Link href="/products" className="text-slate-300 hover:text-white transition">
                 Products
+              </Link>
+              <Link href="/supplies" className="text-slate-300 hover:text-white transition">
+                Supplies
+              </Link>
+              <Link href="/about" className="text-slate-300 hover:text-white transition">
+                About
               </Link>
               <Link href="/cart" className="text-slate-300 hover:text-white transition">
                 <ShoppingCart className="h-5 w-5" />
@@ -34,7 +37,7 @@ export default function Home() {
           <div className="inline-block mb-4 px-4 py-2 bg-slate-800/50 border border-slate-700 rounded-full">
             <span className="text-slate-400 text-sm">Research Peptides • Grey Market Pricing</span>
           </div>
-          
+
           <h1 className="text-6xl font-bold text-white mb-6">
             Premium Research Peptides
             <br />
@@ -42,14 +45,14 @@ export default function Home() {
               At Grey Market Prices
             </span>
           </h1>
-          
+
           <p className="text-xl text-slate-400 mb-8 max-w-2xl mx-auto">
-            High-quality peptides sourced directly from trusted suppliers. 
+            High-quality peptides sourced directly from trusted suppliers.
             Best pricing, fast shipping, discreet packaging.
           </p>
-          
+
           <div className="flex items-center justify-center space-x-4">
-            <Link 
+            <Link
               href="/products"
               className="px-8 py-4 bg-white text-slate-900 rounded-lg font-semibold hover:bg-slate-100 transition inline-flex items-center"
             >
@@ -71,17 +74,17 @@ export default function Home() {
               Orders processed within 24-48 hours. Discreet packaging, tracked delivery.
             </p>
           </div>
-          
+
           <div className="bg-slate-800/30 border border-slate-700/50 p-8 rounded-xl backdrop-blur">
             <div className="h-12 w-12 bg-slate-700/50 rounded-lg flex items-center justify-center mb-4">
               <Shield className="h-6 w-6 text-slate-300" />
             </div>
             <h3 className="text-xl font-bold text-white mb-2">Quality Assured</h3>
             <p className="text-slate-400">
-              Sourced from vetted suppliers. Third-party testing available on larger orders.
+              Sourced from vetted suppliers. Third-party testing available on request.
             </p>
           </div>
-          
+
           <div className="bg-slate-800/30 border border-slate-700/50 p-8 rounded-xl backdrop-blur">
             <div className="h-12 w-12 bg-slate-700/50 rounded-lg flex items-center justify-center mb-4">
               <ShoppingCart className="h-6 w-6 text-slate-300" />
@@ -98,9 +101,9 @@ export default function Home() {
         <div className="max-w-3xl mx-auto bg-slate-800/50 border border-slate-700 rounded-xl p-8 backdrop-blur">
           <h3 className="text-lg font-bold text-white mb-4">⚠️ Important Disclaimer</h3>
           <p className="text-slate-400 text-sm leading-relaxed">
-            All products sold on PeptidePrice Grey are intended for research purposes only. 
-            These products are NOT intended for human consumption, clinical use, or any 
-            FDA-approved application. By purchasing, you confirm you are 18+ years of age 
+            All products sold on PeptidePrice Grey are intended for research purposes only.
+            These products are NOT intended for human consumption, clinical use, or any
+            FDA-approved application. By purchasing, you confirm you are 18+ years of age
             and understand the legal implications.
           </p>
         </div>
@@ -112,7 +115,8 @@ export default function Home() {
             <p>© 2025 PeptidePrice Grey. Research use only.</p>
             <div className="flex space-x-6">
               <Link href="/products" className="hover:text-white transition">Products</Link>
-              <Link href="/cart" className="hover:text-white transition">Cart</Link>
+              <Link href="/supplies" className="hover:text-white transition">Supplies</Link>
+              <Link href="/about" className="hover:text-white transition">About</Link>
             </div>
           </div>
         </div>

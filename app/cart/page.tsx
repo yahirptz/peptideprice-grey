@@ -1,23 +1,24 @@
 'use client';
 
 import Link from 'next/link';
-import { Trash2, Plus, Minus, ShoppingBag } from 'lucide-react';
 import { useCartStore } from '@/lib/cart-store';
-import CartButton from '@/components/CartButton';
+import { Trash2, Plus, Minus, ShoppingCart } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 export default function CartPage() {
+  const router = useRouter();
   const items = useCartStore((state) => state.items);
   const removeItem = useCartStore((state) => state.removeItem);
   const updateQuantity = useCartStore((state) => state.updateQuantity);
+  const clearCart = useCartStore((state) => state.clearCart);
   const getTotalPrice = useCartStore((state) => state.getTotalPrice());
 
-  const subtotal = getTotalPrice;
-  const shipping = items.length > 0 ? 15.00 : 0;
-  const total = subtotal + shipping;
+  const shipping = 15.00;
+  const total = getTotalPrice + shipping;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
-      <nav className="border-b border-slate-700/50 bg-slate-900/50 backdrop-blur sticky top-0 z-50">
+      <nav className="border-b border-slate-700/50 bg-slate-900/50 backdrop-blur">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <Link href="/" className="flex items-center space-x-2">
@@ -26,12 +27,19 @@ export default function CartPage() {
                 PeptidePrice <span className="text-slate-400">Grey</span>
               </span>
             </Link>
-            
             <div className="flex items-center space-x-6">
               <Link href="/products" className="text-slate-300 hover:text-white transition">
                 Products
               </Link>
-              <CartButton />
+              <Link href="/supplies" className="text-slate-300 hover:text-white transition">
+                Supplies
+              </Link>
+              <Link href="/about" className="text-slate-300 hover:text-white transition">
+                About
+              </Link>
+              <Link href="/cart" className="text-white font-semibold">
+                <ShoppingCart className="h-5 w-5" />
+              </Link>
             </div>
           </div>
         </div>
@@ -42,10 +50,10 @@ export default function CartPage() {
 
         {items.length === 0 ? (
           <div className="bg-slate-800/30 border border-slate-700/50 rounded-xl p-12 text-center backdrop-blur">
-            <ShoppingBag className="h-16 w-16 text-slate-600 mx-auto mb-4" />
+            <ShoppingCart className="h-16 w-16 text-slate-600 mx-auto mb-4" />
             <h2 className="text-2xl font-bold text-white mb-2">Your cart is empty</h2>
-            <p className="text-slate-400 mb-6">Add some peptides to get started!</p>
-            <Link 
+            <p className="text-slate-400 mb-6">Add some peptides to get started</p>
+            <Link
               href="/products"
               className="inline-block px-6 py-3 bg-white text-slate-900 rounded-lg font-semibold hover:bg-slate-100 transition"
             >
@@ -56,66 +64,67 @@ export default function CartPage() {
           <div className="grid lg:grid-cols-3 gap-8">
             <div className="lg:col-span-2 space-y-4">
               {items.map((item) => (
-                <div 
+                <div
                   key={item.id}
                   className="bg-slate-800/30 border border-slate-700/50 rounded-xl p-6 backdrop-blur"
                 >
-                  <div className="flex gap-4">
-                    <div className="w-24 h-24 bg-gradient-to-br from-slate-700/50 to-slate-800/50 rounded-lg flex items-center justify-center flex-shrink-0">
-                      <span className="text-3xl font-bold text-slate-600/50">
+                  <div className="flex gap-6">
+                    <div className="w-24 h-24 bg-gradient-to-br from-slate-700 to-slate-800 rounded-lg flex items-center justify-center flex-shrink-0">
+                      <span className="text-3xl font-bold text-slate-600">
                         {item.name.charAt(0)}
                       </span>
                     </div>
 
                     <div className="flex-1">
-                      <h3 className="text-lg font-bold text-white mb-1">
-                        {item.name}
-                      </h3>
-                      <p className="text-slate-400 text-sm mb-3">
-                        {item.dosage}
-                      </p>
+                      <h3 className="text-xl font-bold text-white mb-1">{item.name}</h3>
+                      <p className="text-slate-400 text-sm mb-4">{item.dosage}</p>
 
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center space-x-2">
+                      <div className="flex items-center gap-4">
+                        <div className="flex items-center gap-2">
                           <button
-                            onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                            className="w-8 h-8 bg-slate-700 hover:bg-slate-600 rounded-lg flex items-center justify-center transition"
+                            onClick={() => updateQuantity(item.id, Math.max(1, item.quantity - 1))}
+                            className="w-8 h-8 bg-slate-700 hover:bg-slate-600 rounded flex items-center justify-center transition"
                           >
                             <Minus className="h-4 w-4 text-white" />
                           </button>
-                          
-                          <span className="w-12 text-center text-white font-semibold">
+                          <span className="w-12 text-center font-semibold text-white">
                             {item.quantity}
                           </span>
-                          
                           <button
                             onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                            className="w-8 h-8 bg-slate-700 hover:bg-slate-600 rounded-lg flex items-center justify-center transition"
+                            className="w-8 h-8 bg-slate-700 hover:bg-slate-600 rounded flex items-center justify-center transition"
                           >
                             <Plus className="h-4 w-4 text-white" />
                           </button>
                         </div>
 
-                        <div className="text-right">
-                          <div className="text-xl font-bold text-white">
-                            ${(item.price * item.quantity).toFixed(2)}
-                          </div>
-                          <div className="text-sm text-slate-400">
-                            ${item.price.toFixed(2)} each
-                          </div>
-                        </div>
+                        <button
+                          onClick={() => removeItem(item.id)}
+                          className="ml-auto text-red-400 hover:text-red-300 transition"
+                        >
+                          <Trash2 className="h-5 w-5" />
+                        </button>
                       </div>
                     </div>
 
-                    <button
-                      onClick={() => removeItem(item.id)}
-                      className="text-red-400 hover:text-red-300 transition"
-                    >
-                      <Trash2 className="h-5 w-5" />
-                    </button>
+                    <div className="text-right">
+                      <div className="text-2xl font-bold text-white">
+                        ${(item.price * item.quantity).toFixed(2)}
+                      </div>
+                      <div className="text-sm text-slate-400">
+                        ${item.price.toFixed(2)} each
+                      </div>
+                    </div>
                   </div>
                 </div>
               ))}
+
+              <button
+                onClick={clearCart}
+                className="text-red-400 hover:text-red-300 text-sm transition"
+              >
+                Clear Cart
+              </button>
             </div>
 
             <div className="lg:col-span-1">
@@ -125,7 +134,7 @@ export default function CartPage() {
                 <div className="space-y-3 mb-6">
                   <div className="flex justify-between text-slate-400">
                     <span>Subtotal</span>
-                    <span>${subtotal.toFixed(2)}</span>
+                    <span>${getTotalPrice.toFixed(2)}</span>
                   </div>
                   <div className="flex justify-between text-slate-400">
                     <span>Shipping</span>
@@ -137,43 +146,24 @@ export default function CartPage() {
                   </div>
                 </div>
 
-                <Link
-                  href="/checkout"
-                  className="block w-full py-3 px-4 bg-white text-slate-900 rounded-lg text-center font-semibold hover:bg-slate-100 transition mb-3"
+                <button
+                  onClick={() => router.push('/checkout')}
+                  className="w-full py-3 bg-white text-slate-900 rounded-lg font-semibold hover:bg-slate-100 transition mb-4"
                 >
                   Proceed to Checkout
-                </Link>
+                </button>
 
                 <Link
                   href="/products"
-                  className="block w-full py-3 px-4 bg-slate-700 text-white rounded-lg text-center font-semibold hover:bg-slate-600 transition"
+                  className="block text-center text-slate-400 hover:text-white text-sm transition"
                 >
                   Continue Shopping
                 </Link>
-
-                <div className="mt-6 p-4 bg-slate-700/30 rounded-lg">
-                  <p className="text-slate-400 text-xs">
-                    <strong className="text-white">Note:</strong> All products are for research purposes only.
-                  </p>
-                </div>
               </div>
             </div>
           </div>
         )}
       </div>
-
-      <footer className="border-t border-slate-700/50 bg-slate-900/50 backdrop-blur mt-20">
-        <div className="container mx-auto px-4 py-8">
-          <div className="flex items-center justify-between text-slate-400 text-sm">
-            <p>© 2025 PeptidePrice Grey. Research use only.</p>
-            <div className="flex space-x-6">
-              <Link href="/terms" className="hover:text-white transition">Terms</Link>
-              <Link href="/privacy" className="hover:text-white transition">Privacy</Link>
-              <Link href="/contact" className="hover:text-white transition">Contact</Link>
-            </div>
-          </div>
-        </div>
-      </footer>
     </div>
   );
 }
