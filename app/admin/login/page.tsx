@@ -1,11 +1,10 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { Lock, AlertCircle } from 'lucide-react';
 
 export default function AdminLoginPage() {
-  const router = useRouter();
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -25,7 +24,6 @@ export default function AdminLoginPage() {
         credentials: 'include',
       });
 
-      // Check if response has content before parsing JSON
       const text = await response.text();
       console.log('Response status:', response.status);
       console.log('Response text:', text);
@@ -112,9 +110,9 @@ export default function AdminLoginPage() {
         </div>
 
         <div className="text-center mt-6">
-          <a href="/" className="text-slate-400 hover:text-white transition text-sm">
+          <Link href="/" className="text-slate-400 hover:text-white transition text-sm">
             ← Back to Store
-          </a>
+          </Link>
         </div>
       </div>
     </div>
