@@ -21,7 +21,7 @@ export default function TermsPage() {
           <section>
             <h2 className="text-2xl font-bold text-white mb-4">1. Acceptance of Terms</h2>
             <p>
-              By accessing and using PeptidePrice Grey ("the Website"), you accept and agree to be bound by the terms and provisions of this agreement. If you do not agree to these terms, please do not use this Website.
+              By accessing and using PeptidePrice Grey (&quot;the Website&quot;), you accept and agree to be bound by the terms and provisions of this agreement. If you do not agree to these terms, please do not use this Website.
             </p>
           </section>
 
@@ -95,7 +95,7 @@ export default function TermsPage() {
               TO THE MAXIMUM EXTENT PERMITTED BY LAW:
             </p>
             <ul className="list-disc ml-6 space-y-2">
-              <li>We provide products "AS IS" without any warranties</li>
+              <li>We provide products &quot;AS IS&quot; without any warranties</li>
               <li>We are not liable for any damages resulting from product use or misuse</li>
               <li>We are not responsible for legal consequences of purchasing or possessing research peptides in your jurisdiction</li>
               <li>Total liability shall not exceed the purchase price of the product</li>
