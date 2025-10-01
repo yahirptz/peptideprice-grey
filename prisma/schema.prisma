@@ -94,7 +94,6 @@ model order {
   
   paymentMethod    String?
   paymentStatus    String  @default("pending")
-  stripePaymentId  String?
   
   orderStatus      String   @default("received")
   supplierId       Int?

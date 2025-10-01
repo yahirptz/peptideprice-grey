@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { ShoppingBag, Wallet, DollarSign, Copy, Check, AlertCircle } from 'lucide-react';
+import { ShoppingBag, Wallet, DollarSign, AlertCircle } from 'lucide-react';
 import { useCartStore } from '@/lib/cart-store';
 import PaymentMethods from '@/components/PaymentMethods';
 
@@ -15,7 +15,9 @@ export default function CheckoutPage() {
 
   const [isProcessing, setIsProcessing] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState<'crypto' | 'zelle' | 'cashapp'>('crypto');
-  const [copiedAddress, setCopiedAddress] = useState(false);
+  const [ageConfirmed, setAgeConfirmed] = useState(false);
+  const [termsAccepted, setTermsAccepted] = useState(false);
+  const [researchUseConfirmed, setResearchUseConfirmed] = useState(false);
 
   const [formData, setFormData] = useState({
     customerName: '',
@@ -44,17 +46,27 @@ export default function CheckoutPage() {
     });
   };
 
-  const copyToClipboard = (text: string) => {
-    navigator.clipboard.writeText(text);
-    setCopiedAddress(true);
-    setTimeout(() => setCopiedAddress(false), 2000);
-  };
-
   const handleSubmitOrder = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    // Validation
     if (!formData.customerName || !formData.customerEmail || !formData.shippingAddress) {
       alert('Please fill in all required fields');
+      return;
+    }
+
+    if (!ageConfirmed) {
+      alert('You must confirm you are 18 years or older');
+      return;
+    }
+
+    if (!termsAccepted) {
+      alert('You must accept the Terms of Service');
+      return;
+    }
+
+    if (!researchUseConfirmed) {
+      alert('You must confirm products are for research use only');
       return;
     }
 
@@ -115,6 +127,171 @@ export default function CheckoutPage() {
       <form onSubmit={handleSubmitOrder} className="container mx-auto px-4 py-8">
         <div className="grid lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2 space-y-6">
+            
+            {/* Legal Disclaimers */}
+            <div className="bg-red-500/10 border-2 border-red-500/50 rounded-xl p-6 backdrop-blur">
+              <div className="flex items-start gap-3 mb-4">
+                <AlertCircle className="h-6 w-6 text-red-400 flex-shrink-0 mt-1" />
+                <div>
+                  <h2 className="text-xl font-bold text-red-400 mb-2">
+                    ⚠️ IMPORTANT LEGAL DISCLAIMERS
+                  </h2>
+                  <p className="text-red-200 text-sm mb-4">
+                    Please read carefully and confirm all statements below before proceeding with your order.
+                  </p>
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                <label className="flex items-start gap-3 cursor-pointer group">
+                  <input
+                    type="checkbox"
+                    checked={ageConfirmed}
+                    onChange={(e) => setAgeConfirmed(e.target.checked)}
+                    className="mt-1 h-5 w-5 rounded border-red-500/50 bg-slate-900/50 text-red-500 focus:ring-red-500"
+                    required
+                  />
+                  <span className="text-sm text-slate-300 group-hover:text-white transition">
+                    I confirm that I am <strong className="text-white">18 years of age or older</strong>
+                  </span>
+                </label>
+
+                <label className="flex items-start gap-3 cursor-pointer group">
+                  <input
+                    type="checkbox"
+                    checked={researchUseConfirmed}
+                    onChange={(e) => setResearchUseConfirmed(e.target.checked)}
+                    className="mt-1 h-5 w-5 rounded border-red-500/50 bg-slate-900/50 text-red-500 focus:ring-red-500"
+                    required
+                  />
+                  <span className="text-sm text-slate-300 group-hover:text-white transition">
+                    I understand these products are <strong className="text-white">FOR RESEARCH USE ONLY</strong> and are <strong className="text-white">NOT FOR HUMAN CONSUMPTION</strong>
+                  </span>
+                </label>
+
+                <label className="flex items-start gap-3 cursor-pointer group">
+                  <input
+                    type="checkbox"
+                    checked={termsAccepted}
+                    onChange={(e) => setTermsAccepted(e.target.checked)}
+                    className="mt-1 h-5 w-5 rounded border-red-500/50 bg-slate-900/50 text-red-500 focus:ring-red-500"
+                    required
+                  />
+                  <span className="text-sm text-slate-300 group-hover:text-white transition">
+                    I have read and agree to the{' '}
+                    <Link href="/terms" target="_blank" className="text-red-400 hover:text-red-300 underline">
+                      Terms of Service
+                    </Link>{' '}
+                    and{' '}
+                    <Link href="/privacy" target="_blank" className="text-red-400 hover:text-red-300 underline">
+                      Privacy Policy
+                    </Link>
+                  </span>
+                </label>
+              </div>
+            </div>
+
+            {/* Customer Information */}
+            <div className="bg-slate-800/30 border border-slate-700/50 rounded-xl p-6 backdrop-blur">
+              <h2 className="text-2xl font-bold text-white mb-4">Customer Information</h2>
+              
+              <div className="grid md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-slate-300 mb-2">
+                    Full Name *
+                  </label>
+                  <input
+                    type="text"
+                    name="customerName"
+                    value={formData.customerName}
+                    onChange={handleInputChange}
+                    className="w-full px-4 py-3 bg-slate-900/50 border border-slate-600 rounded-lg text-white"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-slate-300 mb-2">
+                    Email Address *
+                  </label>
+                  <input
+                    type="email"
+                    name="customerEmail"
+                    value={formData.customerEmail}
+                    onChange={handleInputChange}
+                    className="w-full px-4 py-3 bg-slate-900/50 border border-slate-600 rounded-lg text-white"
+                    required
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Shipping Address */}
+            <div className="bg-slate-800/30 border border-slate-700/50 rounded-xl p-6 backdrop-blur">
+              <h2 className="text-2xl font-bold text-white mb-4">Shipping Address</h2>
+              
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-slate-300 mb-2">
+                    Street Address *
+                  </label>
+                  <input
+                    type="text"
+                    name="shippingAddress"
+                    value={formData.shippingAddress}
+                    onChange={handleInputChange}
+                    className="w-full px-4 py-3 bg-slate-900/50 border border-slate-600 rounded-lg text-white"
+                    required
+                  />
+                </div>
+
+                <div className="grid md:grid-cols-3 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-slate-300 mb-2">
+                      City *
+                    </label>
+                    <input
+                      type="text"
+                      name="shippingCity"
+                      value={formData.shippingCity}
+                      onChange={handleInputChange}
+                      className="w-full px-4 py-3 bg-slate-900/50 border border-slate-600 rounded-lg text-white"
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-slate-300 mb-2">
+                      State *
+                    </label>
+                    <input
+                      type="text"
+                      name="shippingState"
+                      value={formData.shippingState}
+                      onChange={handleInputChange}
+                      className="w-full px-4 py-3 bg-slate-900/50 border border-slate-600 rounded-lg text-white"
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-slate-300 mb-2">
+                      ZIP Code *
+                    </label>
+                    <input
+                      type="text"
+                      name="shippingZip"
+                      value={formData.shippingZip}
+                      onChange={handleInputChange}
+                      className="w-full px-4 py-3 bg-slate-900/50 border border-slate-600 rounded-lg text-white"
+                      required
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Payment Method */}
             <div className="bg-slate-800/30 border border-slate-700/50 rounded-xl p-6 backdrop-blur">
               <h2 className="text-2xl font-bold text-white mb-4 flex items-center gap-2">
                 <Wallet className="h-6 w-6" />
@@ -167,145 +344,18 @@ export default function CheckoutPage() {
                 </button>
               </div>
 
-              <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-lg p-4">
-                <div className="flex gap-3">
-                  <AlertCircle className="h-5 w-5 text-yellow-400 flex-shrink-0 mt-0.5" />
-                  <div className="text-yellow-200 text-sm space-y-2">
-                    <p><strong>IMPORTANT PAYMENT INSTRUCTIONS:</strong></p>
-                    <ol className="list-decimal ml-4 space-y-1">
-                      <li>Copy the payment address below</li>
-                      <li>Send <strong>${total.toFixed(2)}</strong> to that address</li>
-                      <li><strong>INCLUDE YOUR ORDER NUMBER IN THE PAYMENT NOTE/MEMO</strong></li>
-                      <li>After payment is sent, submit this form</li>
-                      <li>Your order number will be shown after you submit</li>
-                    </ol>
-                    <p className="text-yellow-300 font-bold mt-2">
-                      ⚠️ Without your order number in the payment note, we cannot process your order!
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="mt-6 bg-slate-700/30 rounded-lg p-4">
-                <p className="text-sm text-slate-400 mb-2">
-                  {paymentMethod === 'crypto' && 'Bitcoin Address:'}
-                  {paymentMethod === 'zelle' && 'Zelle Email:'}
-                  {paymentMethod === 'cashapp' && 'Cash App Tag:'}
+              <div className="bg-slate-900/50 rounded-lg p-4">
+                <p className="text-slate-300 text-sm mb-2">
+                  <strong>Payment Address:</strong>
                 </p>
-                <div className="flex gap-2">
-                  <input
-                    type="text"
-                    value={paymentAddresses[paymentMethod]}
-                    readOnly
-                    className="flex-1 px-4 py-2 bg-slate-900 border border-slate-600 rounded text-white font-mono text-sm"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => copyToClipboard(paymentAddresses[paymentMethod])}
-                    className="px-4 py-2 bg-slate-600 hover:bg-slate-500 rounded text-white transition"
-                  >
-                    {copiedAddress ? (
-                      <Check className="h-4 w-4 text-green-400" />
-                    ) : (
-                      <Copy className="h-4 w-4" />
-                    )}
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-slate-800/30 border border-slate-700/50 rounded-xl p-6 backdrop-blur">
-              <h2 className="text-2xl font-bold text-white mb-6">Shipping Information</h2>
-
-              <div className="space-y-4">
-                <div className="grid md:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium text-slate-300 mb-2">
-                      Full Name *
-                    </label>
-                    <input
-                      type="text"
-                      name="customerName"
-                      required
-                      value={formData.customerName}
-                      onChange={handleInputChange}
-                      className="w-full px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-slate-500"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-slate-300 mb-2">
-                      Email *
-                    </label>
-                    <input
-                      type="email"
-                      name="customerEmail"
-                      required
-                      value={formData.customerEmail}
-                      onChange={handleInputChange}
-                      className="w-full px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-slate-500"
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-slate-300 mb-2">
-                    Address *
-                  </label>
-                  <input
-                    type="text"
-                    name="shippingAddress"
-                    required
-                    value={formData.shippingAddress}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-slate-500"
-                  />
-                </div>
-
-                <div className="grid md:grid-cols-3 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium text-slate-300 mb-2">
-                      City *
-                    </label>
-                    <input
-                      type="text"
-                      name="shippingCity"
-                      required
-                      value={formData.shippingCity}
-                      onChange={handleInputChange}
-                      className="w-full px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-slate-500"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-slate-300 mb-2">
-                      State *
-                    </label>
-                    <input
-                      type="text"
-                      name="shippingState"
-                      required
-                      value={formData.shippingState}
-                      onChange={handleInputChange}
-                      className="w-full px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-slate-500"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-slate-300 mb-2">
-                      ZIP *
-                    </label>
-                    <input
-                      type="text"
-                      name="shippingZip"
-                      required
-                      value={formData.shippingZip}
-                      onChange={handleInputChange}
-                      className="w-full px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-slate-500"
-                    />
-                  </div>
-                </div>
+                <p className="font-mono text-white break-all">
+                  {paymentAddresses[paymentMethod]}
+                </p>
               </div>
             </div>
           </div>
 
+          {/* Order Summary */}
           <div className="lg:col-span-1">
             <div className="bg-slate-800/30 border border-slate-700/50 rounded-xl p-6 backdrop-blur sticky top-24">
               <h2 className="text-xl font-bold text-white mb-6">Order Summary</h2>
@@ -313,7 +363,7 @@ export default function CheckoutPage() {
               <div className="space-y-3 mb-6">
                 {items.map((item) => (
                   <div key={item.id} className="flex justify-between text-sm">
-                    <span className="text-slate-300">
+                    <span className="text-slate-400">
                       {item.name} x{item.quantity}
                     </span>
                     <span className="text-white font-semibold">
@@ -332,7 +382,7 @@ export default function CheckoutPage() {
                   <span>Shipping</span>
                   <span>${shipping.toFixed(2)}</span>
                 </div>
-                <div className="border-t border-slate-700 pt-2 flex justify-between text-white font-bold text-lg">
+                <div className="flex justify-between text-white font-bold text-lg pt-2 border-t border-slate-700">
                   <span>Total</span>
                   <span>${total.toFixed(2)}</span>
                 </div>
@@ -340,18 +390,18 @@ export default function CheckoutPage() {
 
               <button
                 type="submit"
-                disabled={isProcessing}
-                className={`w-full py-3 px-4 rounded-lg font-semibold transition ${
-                  isProcessing
+                disabled={isProcessing || !ageConfirmed || !termsAccepted || !researchUseConfirmed}
+                className={`w-full py-4 px-6 rounded-lg font-bold text-lg transition ${
+                  isProcessing || !ageConfirmed || !termsAccepted || !researchUseConfirmed
                     ? 'bg-slate-600 text-slate-400 cursor-not-allowed'
                     : 'bg-white text-slate-900 hover:bg-slate-100'
                 }`}
               >
-                {isProcessing ? 'Processing...' : 'Submit Order'}
+                {isProcessing ? 'Processing...' : 'Place Order'}
               </button>
 
-              <p className="text-xs text-slate-400 mt-4 text-center">
-                Your order number will be displayed after submission
+              <p className="text-slate-400 text-xs text-center mt-4">
+                By placing this order, you confirm all statements above and agree to our terms.
               </p>
             </div>
           </div>

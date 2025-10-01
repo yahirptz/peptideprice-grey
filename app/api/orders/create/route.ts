@@ -1,64 +1,47 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { PrismaClient } from '@prisma/client';
+import { randomBytes } from 'crypto';
 
 const prisma = new PrismaClient();
 
-function generateOrderNumber() {
+function generateSecureOrderNumber(): string {
+  const randomHex = randomBytes(8).toString('hex').toUpperCase();
   const timestamp = Date.now().toString(36).toUpperCase();
-  const random = Math.random().toString(36).substring(2, 6).toUpperCase();
-  return `ORD-${timestamp}-${random}`;
+  return `ORD-${timestamp}-${randomHex}`;
 }
 
-interface OrderNotification {
+async function sendTelegramNotification(order: {
   orderNumber: string;
-  total: number;
-  profit: number;
   customerName: string;
   customerEmail: string;
-  shippingAddress: string;
-  shippingCity: string;
-  shippingState: string;
-  shippingZip: string;
+  total: number;
+  profit: number;
+  totalCost: number;
   paymentMethod: string;
-  orderItems: Array<{
-    productName: string;
-    quantity: number;
-    unitPrice: number;
-  }>;
-}
-
-async function sendTelegramNotification(order: OrderNotification) {
+  items: Array<{ productName: string; quantity: number }>;
+}) {
   const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
   const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID;
 
   if (!TELEGRAM_BOT_TOKEN || !TELEGRAM_CHAT_ID) {
-    console.log('Telegram not configured - skipping notification');
     return;
   }
 
   const message = `
-🛍️ *NEW ORDER RECEIVED*
+🆕 *NEW ORDER RECEIVED*
 
 📦 Order: \`${order.orderNumber}\`
 💰 Total: $${order.total.toFixed(2)}
-💵 Profit: $${order.profit.toFixed(2)}
+💵 Cost: $${order.totalCost.toFixed(2)}
+✨ Profit: $${order.profit.toFixed(2)}
+💳 Payment: ${order.paymentMethod?.toUpperCase() || 'N/A'}
 
 👤 *Customer*
 Name: ${order.customerName}
 Email: ${order.customerEmail}
 
-📍 *Shipping*
-${order.shippingAddress}
-${order.shippingCity}, ${order.shippingState} ${order.shippingZip}
-
-💳 *Payment*
-Method: ${order.paymentMethod.toUpperCase()}
-Status: PENDING - Awaiting confirmation
-
 📋 *Items*
-${order.orderItems.map((item) => 
-  `• ${item.productName} x${item.quantity} - $${(item.unitPrice * item.quantity).toFixed(2)}`
-).join('\n')}
+${order.items.map(item => `• ${item.productName} (x${item.quantity})`).join('\n')}
 
 ⚠️ *Customer must include order number in payment note:*
 \`${order.orderNumber}\`
@@ -91,7 +74,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const orderNumber = generateOrderNumber();
+    const orderNumber = generateSecureOrderNumber();
 
     let totalCost = 0;
     const orderItems = [];
@@ -133,14 +116,14 @@ export async function POST(request: NextRequest) {
         shippingCity: customer.shippingCity,
         shippingState: customer.shippingState || '',
         shippingZip: customer.shippingZip,
-        shippingCountry: customer.shippingCountry,
-        subtotal,
+        shippingCountry: customer.shippingCountry || 'US',
+        subtotal: subtotal,
         shippingCharged: shipping,
         tax: 0,
-        total,
-        totalCost,
-        profit,
-        paymentMethod,
+        total: total,
+        totalCost: totalCost,
+        profit: profit,
+        paymentMethod: paymentMethod || 'crypto',
         paymentStatus: 'pending',
         orderStatus: 'received',
         orderItems: {
@@ -154,25 +137,25 @@ export async function POST(request: NextRequest) {
 
     await sendTelegramNotification({
       orderNumber: order.orderNumber,
-      total: Number(order.total),
-      profit: Number(order.profit),
       customerName: order.customerName || '',
       customerEmail: order.customerEmail,
-      shippingAddress: order.shippingAddress,
-      shippingCity: order.shippingCity,
-      shippingState: order.shippingState || '',
-      shippingZip: order.shippingZip,
+      total: Number(order.total),
+      profit: Number(order.profit),
+      totalCost: Number(order.totalCost),
       paymentMethod: order.paymentMethod || '',
-      orderItems: order.orderItems.map(item => ({
+      items: orderItems.map(item => ({
         productName: item.productName,
         quantity: item.quantity,
-        unitPrice: Number(item.unitPrice),
       })),
     });
 
-    return NextResponse.json(order);
+    return NextResponse.json({
+      success: true,
+      orderNumber: order.orderNumber,
+      orderId: order.id,
+    });
   } catch (error) {
-    console.error('Error creating order:', error);
+    console.error('Order creation error:', error);
     return NextResponse.json(
       { error: 'Failed to create order' },
       { status: 500 }
