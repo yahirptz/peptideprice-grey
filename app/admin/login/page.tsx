@@ -1,12 +1,11 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation'; // Re-introducing useRouter
-import Link from 'next/link'; // Re-introducing Link
+import { useRouter } from 'next/navigation';
 import { Lock, AlertCircle } from 'lucide-react';
 
 export default function AdminLoginPage() {
-  const router = useRouter(); // Router hook is now used
+  const router = useRouter();
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -23,19 +22,33 @@ export default function AdminLoginPage() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ password }),
+        credentials: 'include',
       });
 
-      const data = await response.json();
+      // Check if response has content before parsing JSON
+      const text = await response.text();
+      console.log('Response status:', response.status);
+      console.log('Response text:', text);
+
+      let data;
+      try {
+        data = text ? JSON.parse(text) : {};
+      } catch (e) {
+        console.error('Failed to parse JSON:', e);
+        setError('Server error - invalid response');
+        setIsLoading(false);
+        return;
+      }
 
       if (response.ok) {
-        // Using router.push to resolve the compilation failure error
-        router.push('/admin/orders'); 
-        router.refresh();
+        console.log('✅ Login successful, redirecting...');
+        await new Promise(resolve => setTimeout(resolve, 100));
+        window.location.href = '/admin/orders';
       } else {
         setError(data.error || 'Invalid password');
       }
-    } catch {
-      // The 'err' parameter was previously removed to address the unused variable warning.
+    } catch (err) {
+      console.error('Login error:', err);
       setError('Login failed. Please try again.');
     } finally {
       setIsLoading(false);
@@ -99,10 +112,9 @@ export default function AdminLoginPage() {
         </div>
 
         <div className="text-center mt-6">
-          {/* Using <Link> to resolve the critical build error */}
-          <Link href="/" className="text-slate-400 hover:text-white transition text-sm">
+          <a href="/" className="text-slate-400 hover:text-white transition text-sm">
             ← Back to Store
-          </Link>
+          </a>
         </div>
       </div>
     </div>
