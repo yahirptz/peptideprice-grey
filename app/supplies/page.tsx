@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { ExternalLink } from 'lucide-react';
+import { ShoppingCart, ExternalLink } from 'lucide-react';
 
 const supplies = [
   {
@@ -48,7 +48,7 @@ export default function SuppliesPage() {
             <Link href="/" className="flex items-center space-x-2">
               <div className="h-8 w-8 bg-gradient-to-br from-slate-500 to-slate-700 rounded-lg" />
               <span className="text-xl font-bold text-white">
-                PremuimPeptides <span className="text-slate-400">Grey</span>
+                PremiumPeptides
               </span>
             </Link>
 
@@ -56,12 +56,12 @@ export default function SuppliesPage() {
               <Link href="/products" className="text-slate-300 hover:text-white transition">
                 Products
               </Link>
-              <link href="/" className="text-slate-300 hover:text-white transition">
+              <Link href="/coa" className="text-slate-300 hover:text-white transition">
                 COA
-              </link>
-              <link href="/labs" className="text-slate-300 hover:text-white transition">
+              </Link>
+              <Link href="/reviews" className="text-slate-300 hover:text-white transition">
                 Reviews
-              </link>
+              </Link>
               <Link href="/supplies" className="text-white font-semibold">
                 Supplies
               </Link>
@@ -70,6 +70,9 @@ export default function SuppliesPage() {
               </Link>
               <Link href="/faq" className="text-slate-300 hover:text-white transition">
                 FAQ
+              </Link>
+              <Link href="/cart" className="text-slate-300 hover:text-white transition">
+                <ShoppingCart className="h-5 w-5" />
               </Link>
             </div>
           </div>
@@ -105,8 +108,8 @@ export default function SuppliesPage() {
               <div className="p-6">
                 <h3 className="text-xl font-bold text-white mb-2">{supply.name}</h3>
                 <p className="text-slate-400 text-sm mb-6">{supply.description}</p>
-                <a
-                  href={supply.amazonLink}
+                
+                 <a href={supply.amazonLink}
                   target="_blank"
                   rel="noopener noreferrer nofollow"
                   className="flex items-center justify-center gap-2 w-full py-3 px-4 bg-orange-600 hover:bg-orange-500 text-white rounded-lg font-semibold transition"
@@ -134,9 +137,10 @@ export default function SuppliesPage() {
             <p>© 2025 PremiumPeptides. Research use only.</p>
             <div className="flex space-x-6">
               <Link href="/products" className="hover:text-white transition">Products</Link>
-              <Link href="/supplies" className="hover:text-white transition">Supplies</Link>
+              <Link href="/coa" className="hover:text-white transition">COA</Link>
+              <Link href="/reviews" className="hover:text-white transition">Reviews</Link>
               <Link href="/about" className="hover:text-white transition">About</Link>
-              <Link href="/faq" className="hover:text-white transition">FAQ</Link>
+              <Link href="/terms" className="hover:text-white transition">Terms</Link>
             </div>
           </div>
         </div>
