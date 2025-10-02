@@ -11,7 +11,7 @@ export default function Home() {
             <div className="flex items-center space-x-2">
               <div className="h-8 w-8 bg-gradient-to-br from-slate-500 to-slate-700 rounded-lg" />
               <span className="text-xl font-bold text-white">
-                PeptidePrice <span className="text-slate-400">Grey</span>
+                PremiumPeptides<span className="text-slate-400">Grey</span>
               </span>
             </div>
 
@@ -95,7 +95,7 @@ export default function Home() {
             </div>
             <h3 className="text-xl font-bold text-white mb-2">Secure Checkout</h3>
             <p className="text-slate-400">
-              Multiple payment options. Your information is encrypted and protected.
+             your information is encrypted and protected.
             </p>
           </div>
         </div>
@@ -103,7 +103,7 @@ export default function Home() {
 
       <div className="container mx-auto px-4 py-16">
         <div className="max-w-6xl mx-auto">
-          <h2 className="text-2xl font-bold text-white text-center mb-8">Why Choose PeptidePrice Grey</h2>
+          <h2 className="text-2xl font-bold text-white text-center mb-8">Why Choose  PremiuimPeptides</h2>
           <TrustBadges />
         </div>
       </div>
@@ -112,7 +112,7 @@ export default function Home() {
         <div className="max-w-3xl mx-auto bg-slate-800/50 border border-slate-700 rounded-xl p-8 backdrop-blur">
           <h3 className="text-lg font-bold text-white mb-4">⚠️ Important Disclaimer</h3>
           <p className="text-slate-400 text-sm leading-relaxed">
-            All products sold on PeptidePrice Grey are intended for research purposes only.
+            All products sold on PremiumPeptides are intended for research purposes only.
             These products are NOT intended for human consumption, clinical use, or any
             FDA-approved application. By purchasing, you confirm you are 18+ years of age
             and understand the legal implications.
@@ -123,7 +123,7 @@ export default function Home() {
       <footer className="border-t border-slate-700/50 bg-slate-900/50 backdrop-blur mt-20">
         <div className="container mx-auto px-4 py-8">
           <div className="flex items-center justify-between text-slate-400 text-sm">
-            <p>© 2025 PeptidePrice Grey. Research use only.</p>
+            <p>© 2025 PremuimPeptides. Research use only.</p>
             <div className="flex space-x-6">
               <Link href="/products" className="hover:text-white transition">Products</Link>
               <Link href="/supplies" className="hover:text-white transition">Supplies</Link>

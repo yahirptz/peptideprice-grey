@@ -7,7 +7,7 @@ export default function PrivacyPage() {
         <div className="container mx-auto px-4 py-4">
           <Link href="/" className="flex items-center space-x-2">
             <span className="text-xl font-bold text-white">
-              PeptidePrice <span className="text-slate-400">Grey</span>
+              PremiumPeptides <span className="text-slate-400">Grey</span>
             </span>
           </Link>
         </div>

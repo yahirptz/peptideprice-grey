@@ -10,7 +10,7 @@ export default function AboutPage() {
             <Link href="/" className="flex items-center space-x-2">
               <div className="h-8 w-8 bg-gradient-to-br from-slate-500 to-slate-700 rounded-lg" />
               <span className="text-xl font-bold text-white">
-                PeptidePrice <span className="text-slate-400">Grey</span>
+                PremiumPeptides <span className="text-slate-400">Grey</span>
               </span>
             </Link>
             <div className="flex items-center space-x-6">
@@ -39,8 +39,8 @@ export default function AboutPage() {
             <div className="bg-slate-800/30 border border-slate-700/50 rounded-xl p-8 backdrop-blur">
               <h2 className="text-2xl font-bold text-white mb-4">Who We Are</h2>
               <p className="leading-relaxed">
-                PeptidePrice Grey is your trusted source for research-grade peptides at competitive grey market prices. 
-                We bridge the gap between premium quality and affordability, sourcing directly from vetted suppliers 
+                PremiumPeptides is your trusted source for research-grade peptides at competitive grey market prices. 
+                We bridge the gap between premium quality and affordability where everyone should have the same oppurtunity to research their peptides, sourcing directly from vetted suppliers 
                 to bring you the best prices on the market.
               </p>
             </div>
@@ -93,7 +93,7 @@ export default function AboutPage() {
       <footer className="border-t border-slate-700/50 bg-slate-900/50 backdrop-blur mt-20">
         <div className="container mx-auto px-4 py-8">
           <div className="flex items-center justify-between text-slate-400 text-sm">
-            <p>© 2025 PeptidePrice Grey. Research use only.</p>
+            <p>© 2025 PremiumPeptides. Research use only.</p>
             <div className="flex space-x-6">
               <Link href="/products" className="hover:text-white transition">Products</Link>
               <Link href="/supplies" className="hover:text-white transition">Supplies</Link>

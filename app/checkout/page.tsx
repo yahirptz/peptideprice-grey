@@ -135,7 +135,7 @@ export default function CheckoutPage() {
           <Link href="/" className="flex items-center space-x-2">
             <ShoppingBag className="h-6 w-6 text-white" />
             <span className="text-xl font-bold text-white">
-              PeptidePrice <span className="text-slate-400">Grey</span>
+              PremiumPeptides <span className="text-slate-400">Grey</span>
             </span>
           </Link>
         </div>

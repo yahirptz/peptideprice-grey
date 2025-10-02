@@ -24,7 +24,7 @@ export default function CartPage() {
             <Link href="/" className="flex items-center space-x-2">
               <div className="h-8 w-8 bg-gradient-to-br from-slate-500 to-slate-700 rounded-lg" />
               <span className="text-xl font-bold text-white">
-                PeptidePrice <span className="text-slate-400">Grey</span>
+                PremiumPeptides <span className="text-slate-400">Grey</span>
               </span>
             </Link>
             <div className="flex items-center space-x-6">

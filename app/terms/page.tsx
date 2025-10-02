@@ -7,7 +7,7 @@ export default function TermsPage() {
         <div className="container mx-auto px-4 py-4">
           <Link href="/" className="flex items-center space-x-2">
             <span className="text-xl font-bold text-white">
-              PeptidePrice <span className="text-slate-400">Grey</span>
+              PremiumPeptides <span className="text-slate-400">Grey</span>
             </span>
           </Link>
         </div>
@@ -21,7 +21,7 @@ export default function TermsPage() {
           <section>
             <h2 className="text-2xl font-bold text-white mb-4">1. Acceptance of Terms</h2>
             <p>
-              By accessing and using PeptidePrice Grey (&quot;the Website&quot;), you accept and agree to be bound by the terms and provisions of this agreement. If you do not agree to these terms, please do not use this Website.
+              By accessing and using PremiumPeptides (&quot;the Website&quot;), you accept and agree to be bound by the terms and provisions of this agreement. If you do not agree to these terms, please do not use this Website.
             </p>
           </section>
 
@@ -136,7 +136,7 @@ export default function TermsPage() {
 
           <div className="mt-8 p-6 bg-red-500/10 border border-red-500/50 rounded-lg">
             <p className="text-red-300 font-semibold">
-              ⚠️ By purchasing from PeptidePrice Grey, you acknowledge that you have read, understood, and agree to these Terms of Service.
+              ⚠️ By purchasing from PremiumPeptides, you acknowledge that you have read, understood, and agree to these Terms of Service.
             </p>
           </div>
         </div>
