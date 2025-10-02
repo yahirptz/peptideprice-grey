@@ -127,12 +127,18 @@ export default function FAQPage() {
             <Link href="/" className="flex items-center space-x-2">
               <div className="h-8 w-8 bg-gradient-to-br from-slate-500 to-slate-700 rounded-lg" />
               <span className="text-xl font-bold text-white">
-                PremiumPeptides <span className="text-slate-400">Grey</span>
+                PremiumPeptides
               </span>
             </Link>
             <div className="flex items-center space-x-6">
               <Link href="/products" className="text-slate-300 hover:text-white transition">
                 Products
+              </Link>
+              <Link href="/coa" className="text-slate-300 hover:text-white transition">
+                COA
+              </Link>
+              <Link href="/reviews" className="text-slate-300 hover:text-white transition">
+                Reviews
               </Link>
               <Link href="/supplies" className="text-slate-300 hover:text-white transition">
                 Supplies
@@ -146,12 +152,6 @@ export default function FAQPage() {
               <Link href="/cart" className="text-slate-300 hover:text-white transition">
                 <ShoppingCart className="h-5 w-5" />
               </Link>
-              <link href="/account" className="text-slate-300 hover:text-white transition">
-                Coa
-              </link>
-              <link href="/account" className="text-slate-300 hover:text-white transition">
-                reviews
-              </link>
             </div>
           </div>
         </div>
@@ -214,9 +214,10 @@ export default function FAQPage() {
             <p>© 2025 PremiumPeptides. Research use only.</p>
             <div className="flex space-x-6">
               <Link href="/products" className="hover:text-white transition">Products</Link>
-              <Link href="/supplies" className="hover:text-white transition">Supplies</Link>
+              <Link href="/coa" className="hover:text-white transition">COA</Link>
+              <Link href="/reviews" className="hover:text-white transition">Reviews</Link>
               <Link href="/about" className="hover:text-white transition">About</Link>
-              <Link href="/faq" className="hover:text-white transition">FAQ</Link>
+              <Link href="/terms" className="hover:text-white transition">Terms</Link>
             </div>
           </div>
         </div>
