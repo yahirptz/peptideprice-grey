@@ -10,7 +10,7 @@ export default function CheckoutPage() {
   const router = useRouter();
   const items = useCartStore((state) => state.items);
   const clearCart = useCartStore((state) => state.clearCart);
-  const getTotalPrice = useCartStore((state) => state.getTotalPrice());
+  const getTotalPrice = useCartStore((state) => state.getTotalPrice); // FIXED
 
   const [isProcessing, setIsProcessing] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState<'crypto' | 'wire'>('crypto');
@@ -28,11 +28,11 @@ export default function CheckoutPage() {
     shippingCountry: 'US',
   });
 
-  const subtotal = getTotalPrice;
+  const subtotal = getTotalPrice(); // call here
   const shipping = 15.0;
   const total = subtotal + shipping;
 
-  const paymentAddresses = {
+  const paymentAddresses: Record<'crypto' | 'wire', string> = {
     crypto: 'bc1q386fzfnhgx6cajdflvqw63cngpk4g7nahmf23x',
     wire: 'Contact us for wire transfer instructions after placing order',
   };
@@ -73,7 +73,7 @@ export default function CheckoutPage() {
     }
 
     try {
-      const productIds = items.map((item) => item.id);
+      const productIds = items.map((item: { id: string }) => item.id);
       const response = await fetch('/api/validate-cart', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -102,11 +102,11 @@ export default function CheckoutPage() {
         },
         body: JSON.stringify({
           customer: formData,
-          items: items,
-          paymentMethod: paymentMethod,
-          subtotal: subtotal,
-          shipping: shipping,
-          total: total,
+          items,
+          paymentMethod,
+          subtotal,
+          shipping,
+          total,
         }),
       });
 
@@ -206,8 +206,7 @@ export default function CheckoutPage() {
               </div>
             </div>
 
-            {/* CUSTOMER INFO */}
-            {/* ... no changes needed here ... */}
+            {/* CUSTOMER INFO (unchanged) */}
 
             {/* PAYMENT METHOD */}
             <div className="bg-slate-800/30 border border-slate-700/50 rounded-xl p-6 backdrop-blur">
@@ -221,9 +220,7 @@ export default function CheckoutPage() {
                 </p>
               </div>
 
-              {/* ... rest unchanged ... */}
-
-              {/* Payment Instructions / Address with Crypto Guide Link */}
+              {/* Payment Instructions */}
               <div className="bg-slate-900/50 rounded-lg p-4">
                 <p className="text-slate-300 text-sm mb-2">
                   <strong>Payment {paymentMethod === 'wire' ? 'Instructions' : 'Address'}:</strong>
@@ -236,15 +233,14 @@ export default function CheckoutPage() {
                     href="/crypto-guide"
                     className="text-blue-400 hover:text-blue-300 text-sm underline"
                   >
-                    New to crypto? Click here for step-by-step instructions &rarr;
+                    New to crypto? Click here for step-by-step instructions →
                   </Link>
                 )}
               </div>
             </div>
           </div>
 
-          {/* ORDER SUMMARY */}
-          {/* ... unchanged except fixed apostrophes ... */}
+          {/* ORDER SUMMARY (unchanged) */}
         </div>
       </form>
     </div>

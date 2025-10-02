@@ -4,7 +4,7 @@ import { ShoppingCart } from 'lucide-react';
 import { useCartStore } from '@/lib/cart-store';
 import { useState } from 'react';
 
-interface Product {
+export interface Product {
   id: number;
   name: string;
   slug: string;
@@ -13,11 +13,11 @@ interface Product {
   imageUrl?: string | null;
 }
 
-export default function AddToCartButton({ 
-  product, 
-  inStock 
-}: { 
-  product: Product; 
+export default function AddToCartButton({
+  product,
+  inStock,
+}: {
+  product: Product;
   inStock: boolean;
 }) {
   const addItem = useCartStore((state) => state.addItem);
@@ -33,7 +33,7 @@ export default function AddToCartButton({
         id: product.id,
         name: product.name,
         slug: product.slug,
-        dosage: product.dosage || '',
+        dosage: product.dosage ?? '',
         price: product.salePrice,
         imageUrl: product.imageUrl,
       });
@@ -64,9 +64,7 @@ export default function AddToCartButton({
         <ShoppingCart className="h-4 w-4 inline mr-1" />
         {isAdding ? 'Adding...' : 'Add to Cart'}
       </button>
-      {error && (
-        <div className="text-xs text-red-400 mt-1">{error}</div>
-      )}
+      {error && <div className="text-xs text-red-400 mt-1">{error}</div>}
     </>
   );
 }
