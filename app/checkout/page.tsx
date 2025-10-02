@@ -5,7 +5,6 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { ShoppingBag, Wallet, DollarSign, AlertCircle } from 'lucide-react';
 import { useCartStore } from '@/lib/cart-store';
-import PaymentMethods from '@/components/PaymentMethods';
 
 export default function CheckoutPage() {
   const router = useRouter();
@@ -14,7 +13,7 @@ export default function CheckoutPage() {
   const getTotalPrice = useCartStore((state) => state.getTotalPrice());
 
   const [isProcessing, setIsProcessing] = useState(false);
-  const [paymentMethod, setPaymentMethod] = useState<'crypto' | 'zelle' | 'cashapp'>('crypto');
+  const [paymentMethod, setPaymentMethod] = useState<'crypto' | 'wire'>('crypto');
   const [ageConfirmed, setAgeConfirmed] = useState(false);
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [researchUseConfirmed, setResearchUseConfirmed] = useState(false);
@@ -30,13 +29,12 @@ export default function CheckoutPage() {
   });
 
   const subtotal = getTotalPrice;
-  const shipping = 15.00;
+  const shipping = 15.0;
   const total = subtotal + shipping;
 
   const paymentAddresses = {
     crypto: 'bc1q386fzfnhgx6cajdflvqw63cngpk4g7nahmf23x',
-    zelle: 'Yahir.perezt70@gmail.com',
-    cashapp: '$YahirPV',
+    wire: 'Contact us for wire transfer instructions after placing order',
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -49,7 +47,6 @@ export default function CheckoutPage() {
   const handleSubmitOrder = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Validation
     if (!formData.customerName || !formData.customerEmail || !formData.shippingAddress) {
       alert('Please fill in all required fields');
       return;
@@ -72,6 +69,26 @@ export default function CheckoutPage() {
 
     if (items.length === 0) {
       alert('Your cart is empty');
+      return;
+    }
+
+    try {
+      const productIds = items.map((item) => item.id);
+      const response = await fetch('/api/validate-cart', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ productIds }),
+      });
+
+      const validation = await response.json();
+
+      if (!validation.valid) {
+        alert(validation.message);
+        return;
+      }
+    } catch (error) {
+      console.error('Validation error:', error);
+      alert('Error validating cart. Please try again.');
       return;
     }
 
@@ -127,15 +144,12 @@ export default function CheckoutPage() {
       <form onSubmit={handleSubmitOrder} className="container mx-auto px-4 py-8">
         <div className="grid lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2 space-y-6">
-            
-            {/* Legal Disclaimers */}
+            {/* LEGAL DISCLAIMERS */}
             <div className="bg-red-500/10 border-2 border-red-500/50 rounded-xl p-6 backdrop-blur">
               <div className="flex items-start gap-3 mb-4">
                 <AlertCircle className="h-6 w-6 text-red-400 flex-shrink-0 mt-1" />
                 <div>
-                  <h2 className="text-xl font-bold text-red-400 mb-2">
-                    ⚠️ IMPORTANT LEGAL DISCLAIMERS
-                  </h2>
+                  <h2 className="text-xl font-bold text-red-400 mb-2">IMPORTANT LEGAL DISCLAIMERS</h2>
                   <p className="text-red-200 text-sm mb-4">
                     Please read carefully and confirm all statements below before proceeding with your order.
                   </p>
@@ -165,7 +179,8 @@ export default function CheckoutPage() {
                     required
                   />
                   <span className="text-sm text-slate-300 group-hover:text-white transition">
-                    I understand these products are <strong className="text-white">FOR RESEARCH USE ONLY</strong> and are <strong className="text-white">NOT FOR HUMAN CONSUMPTION</strong>
+                    I understand these products are <strong className="text-white">FOR RESEARCH USE ONLY</strong> and are{' '}
+                    <strong className="text-white">NOT FOR HUMAN CONSUMPTION</strong>
                   </span>
                 </label>
 
@@ -191,15 +206,12 @@ export default function CheckoutPage() {
               </div>
             </div>
 
-            {/* Customer Information */}
+            {/* CUSTOMER INFO */}
             <div className="bg-slate-800/30 border border-slate-700/50 rounded-xl p-6 backdrop-blur">
               <h2 className="text-2xl font-bold text-white mb-4">Customer Information</h2>
-              
               <div className="grid md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-slate-300 mb-2">
-                    Full Name *
-                  </label>
+                  <label className="block text-sm font-medium text-slate-300 mb-2">Full Name *</label>
                   <input
                     type="text"
                     name="customerName"
@@ -209,11 +221,8 @@ export default function CheckoutPage() {
                     required
                   />
                 </div>
-
                 <div>
-                  <label className="block text-sm font-medium text-slate-300 mb-2">
-                    Email Address *
-                  </label>
+                  <label className="block text-sm font-medium text-slate-300 mb-2">Email Address *</label>
                   <input
                     type="email"
                     name="customerEmail"
@@ -226,15 +235,12 @@ export default function CheckoutPage() {
               </div>
             </div>
 
-            {/* Shipping Address */}
+            {/* SHIPPING INFO */}
             <div className="bg-slate-800/30 border border-slate-700/50 rounded-xl p-6 backdrop-blur">
               <h2 className="text-2xl font-bold text-white mb-4">Shipping Address</h2>
-              
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-slate-300 mb-2">
-                    Street Address *
-                  </label>
+                  <label className="block text-sm font-medium text-slate-300 mb-2">Street Address *</label>
                   <input
                     type="text"
                     name="shippingAddress"
@@ -244,12 +250,9 @@ export default function CheckoutPage() {
                     required
                   />
                 </div>
-
                 <div className="grid md:grid-cols-3 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-slate-300 mb-2">
-                      City *
-                    </label>
+                    <label className="block text-sm font-medium text-slate-300 mb-2">City *</label>
                     <input
                       type="text"
                       name="shippingCity"
@@ -259,11 +262,8 @@ export default function CheckoutPage() {
                       required
                     />
                   </div>
-
                   <div>
-                    <label className="block text-sm font-medium text-slate-300 mb-2">
-                      State *
-                    </label>
+                    <label className="block text-sm font-medium text-slate-300 mb-2">State *</label>
                     <input
                       type="text"
                       name="shippingState"
@@ -273,11 +273,8 @@ export default function CheckoutPage() {
                       required
                     />
                   </div>
-
                   <div>
-                    <label className="block text-sm font-medium text-slate-300 mb-2">
-                      ZIP Code *
-                    </label>
+                    <label className="block text-sm font-medium text-slate-300 mb-2">ZIP Code *</label>
                     <input
                       type="text"
                       name="shippingZip"
@@ -291,19 +288,19 @@ export default function CheckoutPage() {
               </div>
             </div>
 
-            {/* Payment Method */}
+            {/* PAYMENT METHOD */}
             <div className="bg-slate-800/30 border border-slate-700/50 rounded-xl p-6 backdrop-blur">
               <h2 className="text-2xl font-bold text-white mb-4 flex items-center gap-2">
                 <Wallet className="h-6 w-6" />
                 Payment Method
               </h2>
-
               <div className="mb-6">
-                <p className="text-slate-400 text-sm mb-4">We accept the following payment methods:</p>
-                <PaymentMethods />
+                <p className="text-slate-400 text-sm mb-4">
+                  We accept cryptocurrency for all orders. Wire transfer available for orders $1000+.
+                </p>
               </div>
 
-              <div className="grid md:grid-cols-3 gap-4 mb-6">
+              <div className="grid md:grid-cols-2 gap-4 mb-6">
                 <button
                   type="button"
                   onClick={() => setPaymentMethod('crypto')}
@@ -314,52 +311,59 @@ export default function CheckoutPage() {
                   }`}
                 >
                   <DollarSign className="h-8 w-8 mx-auto mb-2 text-orange-400" />
-                  <p className="text-white font-semibold">Bitcoin</p>
+                  <p className="text-white font-semibold">Cryptocurrency</p>
+                  <p className="text-slate-400 text-xs mt-1">Bitcoin, USDT</p>
                 </button>
 
-                <button
-                  type="button"
-                  onClick={() => setPaymentMethod('zelle')}
-                  className={`p-4 rounded-lg border-2 transition ${
-                    paymentMethod === 'zelle'
-                      ? 'border-white bg-white/10'
-                      : 'border-slate-600 hover:border-slate-500'
-                  }`}
-                >
-                  <Wallet className="h-8 w-8 mx-auto mb-2 text-purple-400" />
-                  <p className="text-white font-semibold">Zelle</p>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => setPaymentMethod('cashapp')}
-                  className={`p-4 rounded-lg border-2 transition ${
-                    paymentMethod === 'cashapp'
-                      ? 'border-white bg-white/10'
-                      : 'border-slate-600 hover:border-slate-500'
-                  }`}
-                >
-                  <DollarSign className="h-8 w-8 mx-auto mb-2 text-green-400" />
-                  <p className="text-white font-semibold">Cash App</p>
-                </button>
+                {total >= 1000 && (
+                  <button
+                    type="button"
+                    onClick={() => setPaymentMethod('wire')}
+                    className={`p-4 rounded-lg border-2 transition ${
+                      paymentMethod === 'wire'
+                        ? 'border-white bg-white/10'
+                        : 'border-slate-600 hover:border-slate-500'
+                    }`}
+                  >
+                    <Wallet className="h-8 w-8 mx-auto mb-2 text-blue-400" />
+                    <p className="text-white font-semibold">Wire Transfer</p>
+                    <p className="text-slate-400 text-xs mt-1">For orders $1000+</p>
+                  </button>
+                )}
               </div>
 
+              {total < 1000 && (
+                <div className="bg-blue-500/10 border border-blue-500/50 rounded-lg p-4 mb-4">
+                  <p className="text-blue-200 text-sm">
+                    Wire transfer available for orders $1000 or more. Current order: ${total.toFixed(2)}
+                  </p>
+                </div>
+              )}
+
+              {/* Payment Instructions / Address with Crypto Guide Link */}
               <div className="bg-slate-900/50 rounded-lg p-4">
                 <p className="text-slate-300 text-sm mb-2">
-                  <strong>Payment Address:</strong>
+                  <strong>Payment {paymentMethod === 'wire' ? 'Instructions' : 'Address'}:</strong>
                 </p>
-                <p className="font-mono text-white break-all">
+                <p className="font-mono text-white break-all text-sm mb-3">
                   {paymentAddresses[paymentMethod]}
                 </p>
+                {paymentMethod === 'crypto' && (
+                  <Link
+                    href="/crypto-guide"
+                    className="text-blue-400 hover:text-blue-300 text-sm underline"
+                  >
+                    New to crypto? Click here for step-by-step instructions →
+                  </Link>
+                )}
               </div>
             </div>
           </div>
 
-          {/* Order Summary */}
+          {/* ORDER SUMMARY */}
           <div className="lg:col-span-1">
             <div className="bg-slate-800/30 border border-slate-700/50 rounded-xl p-6 backdrop-blur sticky top-24">
               <h2 className="text-xl font-bold text-white mb-6">Order Summary</h2>
-
               <div className="space-y-3 mb-6">
                 {items.map((item) => (
                   <div key={item.id} className="flex justify-between text-sm">

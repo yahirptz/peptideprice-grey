@@ -9,11 +9,13 @@ export interface CartItem {
   price: number;
   quantity: number;
   imageUrl?: string | null;
+  supplierId?: number; // Add this
+  supplierName?: string; // Add this
 }
 
 interface CartStore {
   items: CartItem[];
-  addItem: (item: Omit<CartItem, 'quantity'>) => void;
+  addItem: (item: Omit<CartItem, 'quantity'>) => Promise<{ success: boolean; message?: string }>;
   removeItem: (id: number) => void;
   updateQuantity: (id: number, quantity: number) => void;
   clearCart: () => void;
@@ -26,24 +28,59 @@ export const useCartStore = create<CartStore>()(
     (set, get) => ({
       items: [],
 
-      addItem: (item) => {
-        set((state) => {
-          const existingItem = state.items.find((i) => i.id === item.id);
-          
-          if (existingItem) {
-            // Item already in cart, increase quantity
+      addItem: async (item) => {
+        const currentItems = get().items;
+        
+        // If cart is empty, just add the item
+        if (currentItems.length === 0) {
+          set((state) => ({
+            items: [...state.items, { ...item, quantity: 1 }],
+          }));
+          return { success: true };
+        }
+
+        // Check if item already exists in cart
+        const existingItem = currentItems.find((i) => i.id === item.id);
+        if (existingItem) {
+          // Just increase quantity
+          set((state) => ({
+            items: state.items.map((i) =>
+              i.id === item.id ? { ...i, quantity: i.quantity + 1 } : i
+            ),
+          }));
+          return { success: true };
+        }
+
+        // Check if new item is from same supplier
+        const firstItem = currentItems[0];
+        
+        // Fetch both products to compare suppliers
+        try {
+          const [existingProduct, newProduct] = await Promise.all([
+            fetch(`/api/products/${firstItem.id}`).then(r => r.json()),
+            fetch(`/api/products/${item.id}`).then(r => r.json())
+          ]);
+
+          if (existingProduct.supplierId !== newProduct.supplierId) {
             return {
-              items: state.items.map((i) =>
-                i.id === item.id ? { ...i, quantity: i.quantity + 1 } : i
-              ),
-            };
-          } else {
-            // New item, add to cart
-            return {
-              items: [...state.items, { ...item, quantity: 1 }],
+              success: false,
+              message: `Cannot mix suppliers in one order. Your cart has items from ${existingProduct.supplier?.name}. This item is from ${newProduct.supplier?.name}. Please complete your current order first, or clear your cart.`
             };
           }
-        });
+
+          // Same supplier, add the item
+          set((state) => ({
+            items: [...state.items, { ...item, quantity: 1, supplierId: newProduct.supplierId, supplierName: newProduct.supplier?.name }],
+          }));
+          return { success: true };
+        } catch (error) {
+          console.error('Error checking suppliers:', error);
+          // If API fails, allow the add but warn
+          set((state) => ({
+            items: [...state.items, { ...item, quantity: 1 }],
+          }));
+          return { success: true };
+        }
       },
 
       removeItem: (id) => {
@@ -81,7 +118,7 @@ export const useCartStore = create<CartStore>()(
       },
     }),
     {
-      name: 'cart-storage', // localStorage key
+      name: 'cart-storage',
     }
   )
 );

@@ -9,17 +9,12 @@ export async function GET() {
       where: {
         isActive: true,
       },
-      select: {
-        id: true,
-        name: true,
-        slug: true,
-        description: true,
-        dosage: true,
-        category: true,
-        salePrice: true,
-        inStock: true,
-        stockQuantity: true,
-        imageUrl: true,
+      include: {
+        supplier: {
+          select: {
+            displayName: true,
+          },
+        },
       },
       orderBy: {
         name: 'asc',

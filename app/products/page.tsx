@@ -5,7 +5,7 @@ import Link from 'next/link';
 import CartButton from '@/components/CartButton';
 import AddToCartButton from '@/components/AddToCartButton';
 import Image from 'next/image';
-import { Search, X } from 'lucide-react';
+import { Search, X, AlertCircle } from 'lucide-react';
 
 interface Product {
   id: number;
@@ -18,6 +18,9 @@ interface Product {
   inStock: boolean;
   stockQuantity: number;
   imageUrl: string | null;
+  supplier?: {
+    displayName: string;
+  };
 }
 
 export default function ProductsPage() {
@@ -61,6 +64,14 @@ export default function ProductsPage() {
     setSearchQuery('');
   };
 
+  const getSupplierColor = (displayName?: string) => {
+    if (!displayName) return 'bg-slate-600';
+    if (displayName.includes('A')) return 'bg-blue-600';
+    if (displayName.includes('B')) return 'bg-green-600';
+    if (displayName.includes('C')) return 'bg-purple-600';
+    return 'bg-slate-600';
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
       <nav className="border-b border-slate-700/50 bg-slate-900/50 backdrop-blur sticky top-0 z-50">
@@ -93,6 +104,23 @@ export default function ProductsPage() {
       </nav>
 
       <div className="container mx-auto px-4 py-12">
+        <div className="bg-orange-500/10 border-2 border-orange-500/50 rounded-xl p-6 mb-8 backdrop-blur">
+          <div className="flex items-start gap-3">
+            <AlertCircle className="h-6 w-6 text-orange-400 flex-shrink-0 mt-1" />
+            <div>
+              <h3 className="text-lg font-bold text-orange-400 mb-2">
+                Important: Single Supplier Per Order
+              </h3>
+              <p className="text-orange-200 text-sm mb-2">
+                Each order must contain products from <strong>only ONE supplier</strong>. Mixing products from different suppliers will result in additional shipping charges.
+              </p>
+              <p className="text-orange-200 text-sm">
+                Check the supplier badge on each product before adding to cart. Complete one supplier's order before ordering from another.
+              </p>
+            </div>
+          </div>
+        </div>
+
         <div className="mb-12">
           <h1 className="text-4xl font-bold text-white mb-4">Research Peptides</h1>
           <p className="text-slate-400 text-lg mb-8">
@@ -164,6 +192,12 @@ export default function ProductsPage() {
                       </div>
                     )}
 
+                    <div className="absolute top-4 left-4">
+                      <div className={`${getSupplierColor(product.supplier?.displayName)} text-white px-3 py-1 rounded-full text-xs font-bold`}>
+                        {product.supplier?.displayName || 'Unknown'}
+                      </div>
+                    </div>
+
                     {!product.inStock && (
                       <div className="absolute top-4 right-4 bg-red-500/90 text-white px-3 py-1 rounded-full text-sm font-semibold">
                         Out of Stock
@@ -171,13 +205,13 @@ export default function ProductsPage() {
                     )}
 
                     {product.inStock && (
-                      <div className="absolute top-4 right-4 bg-green-500/90 text-white px-3 py-1 rounded-full text-sm font-semibold">
+                      <div className="absolute top-14 right-4 bg-green-500/90 text-white px-3 py-1 rounded-full text-sm font-semibold">
                         In Stock
                       </div>
                     )}
 
                     {product.stockQuantity > 0 && product.stockQuantity < 10 && (
-                      <div className="absolute top-4 left-4 bg-orange-500/90 text-white px-3 py-1 rounded-full text-xs font-semibold">
+                      <div className="absolute top-24 right-4 bg-orange-500/90 text-white px-3 py-1 rounded-full text-xs font-semibold">
                         Only {product.stockQuantity} left!
                       </div>
                     )}

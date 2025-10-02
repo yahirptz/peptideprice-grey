@@ -4,56 +4,64 @@ import { ShoppingCart } from 'lucide-react';
 import { useCartStore } from '@/lib/cart-store';
 import { useState } from 'react';
 
-interface AddToCartButtonProps {
-  product: {
-    id: number;
-    name: string;
-    slug: string;
-    dosage: string | null;
-    salePrice: number;
-    imageUrl?: string | null;
-  };
-  inStock: boolean;
+interface Product {
+  id: number;
+  name: string;
+  slug: string;
+  dosage: string | null;
+  salePrice: number;
+  imageUrl?: string | null;
 }
 
-export default function AddToCartButton({ product, inStock }: AddToCartButtonProps) {
+export default function AddToCartButton({ 
+  product, 
+  inStock 
+}: { 
+  product: Product; 
+  inStock: boolean;
+}) {
   const addItem = useCartStore((state) => state.addItem);
   const [isAdding, setIsAdding] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleAddToCart = () => {
-    if (!inStock) return;
-
+  const handleAddToCart = async () => {
     setIsAdding(true);
-    
-    addItem({
-      id: product.id,
-      name: product.name,
-      slug: product.slug,
-      dosage: product.dosage || '',
-      price: Number(product.salePrice),
-      imageUrl: product.imageUrl,
-    });
+    setError(null);
 
-    // Show visual feedback
-    setTimeout(() => {
+    try {
+      await addItem({
+        id: product.id,
+        name: product.name,
+        slug: product.slug,
+        dosage: product.dosage || '',
+        price: product.salePrice,
+        imageUrl: product.imageUrl,
+      });
+    } catch (err: any) {
+      setError(err?.message || 'Failed to add item');
+      alert(err?.message || 'Failed to add item');
+    } finally {
       setIsAdding(false);
-    }, 500);
+    }
   };
 
   return (
-    <button
-      onClick={handleAddToCart}
-      disabled={!inStock}
-      className={`flex-1 py-2 px-4 rounded-lg text-sm font-semibold transition ${
-        inStock
-          ? isAdding
-            ? 'bg-green-500 text-white'
+    <>
+      <button
+        onClick={handleAddToCart}
+        disabled={!inStock || isAdding}
+        className={`flex-1 py-2 px-4 rounded-lg text-sm font-semibold transition ${
+          !inStock || isAdding
+            ? 'bg-slate-600 text-slate-400 cursor-not-allowed'
             : 'bg-white text-slate-900 hover:bg-slate-100'
-          : 'bg-slate-700/50 text-slate-500 cursor-not-allowed'
-      }`}
-    >
-      <ShoppingCart className="h-4 w-4 inline mr-1" />
-      {isAdding ? 'Added!' : 'Add to Cart'}
-    </button>
+        }`}
+      >
+        <ShoppingCart className="h-4 w-4 inline mr-1" />
+        {isAdding ? 'Adding...' : 'Add to Cart'}
+      </button>
+      {error && (
+        <div className="text-xs text-red-400 mt-1">{error}</div>
+      )}
+    </>
   );
 }

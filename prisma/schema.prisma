@@ -46,7 +46,8 @@ model product {
 
 model supplier {
   id              Int      @id @default(autoincrement())
-  name            String
+  name            String   @unique
+  displayName     String?
   telegramHandle  String?
   telegramGroupId String?
   contactMethod   String?

@@ -19,6 +19,11 @@ async function sendTelegramNotification(order: {
   totalCost: number;
   paymentMethod: string;
   items: Array<{ productName: string; quantity: number }>;
+  supplierName: string;
+  shippingAddress: string;
+  shippingCity: string;
+  shippingState: string;
+  shippingZip: string;
 }) {
   const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
   const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID;
@@ -36,9 +41,16 @@ async function sendTelegramNotification(order: {
 ✨ Profit: $${order.profit.toFixed(2)}
 💳 Payment: ${order.paymentMethod?.toUpperCase() || 'N/A'}
 
+🏭 *SUPPLIER TO CONTACT*
+📌 ${order.supplierName}
+
 👤 *Customer*
 Name: ${order.customerName}
 Email: ${order.customerEmail}
+
+📍 *Shipping Address*
+${order.shippingAddress}
+${order.shippingCity}, ${order.shippingState} ${order.shippingZip}
 
 📋 *Items*
 ${order.items.map(item => `• ${item.productName} (x${item.quantity})`).join('\n')}
@@ -77,19 +89,30 @@ export async function POST(request: NextRequest) {
     const orderNumber = generateSecureOrderNumber();
 
     let totalCost = 0;
+    let supplierId: number | null = null;
+    let supplierName = '';
     const orderItems = [];
 
     for (const item of items) {
       const product = await prisma.product.findUnique({
         where: { id: item.id },
-        select: {
-          baseCost: true,
-          shippingCost: true,
+        include: {
+          supplier: {
+            select: {
+              id: true,
+              name: true,
+            },
+          },
         },
       });
 
       if (!product) {
         continue;
+      }
+
+      if (supplierId === null && product.supplierId) {
+        supplierId = product.supplierId;
+        supplierName = product.supplier?.name || 'Unknown';
       }
 
       const unitCost = Number(product.baseCost) + Number(product.shippingCost);
@@ -126,6 +149,7 @@ export async function POST(request: NextRequest) {
         paymentMethod: paymentMethod || 'crypto',
         paymentStatus: 'pending',
         orderStatus: 'received',
+        supplierId: supplierId,
         orderItems: {
           create: orderItems,
         },
@@ -143,6 +167,11 @@ export async function POST(request: NextRequest) {
       profit: Number(order.profit),
       totalCost: Number(order.totalCost),
       paymentMethod: order.paymentMethod || '',
+      supplierName: supplierName,
+      shippingAddress: order.shippingAddress,
+      shippingCity: order.shippingCity,
+      shippingState: order.shippingState || '',
+      shippingZip: order.shippingZip,
       items: orderItems.map(item => ({
         productName: item.productName,
         quantity: item.quantity,
