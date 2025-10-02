@@ -56,6 +56,12 @@ export default function SuppliesPage() {
               <Link href="/products" className="text-slate-300 hover:text-white transition">
                 Products
               </Link>
+              <link href="/" className="text-slate-300 hover:text-white transition">
+                COA
+              </link>
+              <link href="/labs" className="text-slate-300 hover:text-white transition">
+                Reviews
+              </link>
               <Link href="/supplies" className="text-white font-semibold">
                 Supplies
               </Link>

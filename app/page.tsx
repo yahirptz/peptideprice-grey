@@ -11,13 +11,19 @@ export default function Home() {
             <div className="flex items-center space-x-2">
               <div className="h-8 w-8 bg-gradient-to-br from-slate-500 to-slate-700 rounded-lg" />
               <span className="text-xl font-bold text-white">
-                PremiumPeptides<span className="text-slate-400">Grey</span>
+                PremiumPeptides
               </span>
             </div>
 
             <div className="flex items-center space-x-6">
               <Link href="/products" className="text-slate-300 hover:text-white transition">
                 Products
+              </Link>
+              <Link href="/coa" className="text-slate-300 hover:text-white transition">
+                COA
+              </Link>
+              <Link href="/reviews" className="text-slate-300 hover:text-white transition">
+                Reviews
               </Link>
               <Link href="/supplies" className="text-slate-300 hover:text-white transition">
                 Supplies
@@ -39,14 +45,14 @@ export default function Home() {
       <div className="container mx-auto px-4 py-20">
         <div className="max-w-4xl mx-auto text-center">
           <div className="inline-block mb-4 px-4 py-2 bg-slate-800/50 border border-slate-700 rounded-full">
-            <span className="text-slate-400 text-sm">Research Peptides • Grey Market Pricing</span>
+            <span className="text-slate-400 text-sm">Research Peptides • Premium Quality</span>
           </div>
 
           <h1 className="text-6xl font-bold text-white mb-6">
             Premium Research Peptides
             <br />
             <span className="bg-gradient-to-r from-slate-400 to-slate-600 bg-clip-text text-transparent">
-              At Grey Market Prices
+              For Serious Researchers
             </span>
           </h1>
 
@@ -95,7 +101,7 @@ export default function Home() {
             </div>
             <h3 className="text-xl font-bold text-white mb-2">Secure Checkout</h3>
             <p className="text-slate-400">
-             your information is encrypted and protected.
+              Your information is encrypted and protected.
             </p>
           </div>
         </div>
@@ -103,7 +109,7 @@ export default function Home() {
 
       <div className="container mx-auto px-4 py-16">
         <div className="max-w-6xl mx-auto">
-          <h2 className="text-2xl font-bold text-white text-center mb-8">Why Choose  PremiuimPeptides</h2>
+          <h2 className="text-2xl font-bold text-white text-center mb-8">Why Choose PremiumPeptides</h2>
           <TrustBadges />
         </div>
       </div>
@@ -123,12 +129,13 @@ export default function Home() {
       <footer className="border-t border-slate-700/50 bg-slate-900/50 backdrop-blur mt-20">
         <div className="container mx-auto px-4 py-8">
           <div className="flex items-center justify-between text-slate-400 text-sm">
-            <p>© 2025 PremuimPeptides. Research use only.</p>
+            <p>© 2025 PremiumPeptides. Research use only.</p>
             <div className="flex space-x-6">
               <Link href="/products" className="hover:text-white transition">Products</Link>
-              <Link href="/supplies" className="hover:text-white transition">Supplies</Link>
+              <Link href="/coa" className="hover:text-white transition">COA</Link>
+              <Link href="/reviews" className="hover:text-white transition">Reviews</Link>
               <Link href="/about" className="hover:text-white transition">About</Link>
-              <Link href="/faq" className="hover:text-white transition">FAQ</Link>
+              <Link href="/terms" className="hover:text-white transition">Terms</Link>
             </div>
           </div>
         </div>

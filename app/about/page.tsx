@@ -184,6 +184,7 @@ export default function AboutPage() {
               <Link href="/coa" className="hover:text-white transition">COA</Link>
               <Link href="/reviews" className="hover:text-white transition">Reviews</Link>
               <Link href="/about" className="hover:text-white transition">About</Link>
+              <Link href="/terms" className="hover:text-white transition">Terms</Link>
             </div>
           </div>
         </div>

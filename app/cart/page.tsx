@@ -34,6 +34,12 @@ export default function CartPage() {
               <Link href="/supplies" className="text-slate-300 hover:text-white transition">
                 Supplies
               </Link>
+              <Link href="/faq" className="text-slate-300 hover:text-white transition">
+                FAQ
+              </Link>
+              <link href="/contact" className="text-slate-300 hover:text-white transition">
+                Coa
+              </link>
               <Link href="/about" className="text-slate-300 hover:text-white transition">
                 About
               </Link>

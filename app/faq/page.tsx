@@ -146,6 +146,12 @@ export default function FAQPage() {
               <Link href="/cart" className="text-slate-300 hover:text-white transition">
                 <ShoppingCart className="h-5 w-5" />
               </Link>
+              <link href="/account" className="text-slate-300 hover:text-white transition">
+                Coa
+              </link>
+              <link href="/account" className="text-slate-300 hover:text-white transition">
+                reviews
+              </link>
             </div>
           </div>
         </div>
