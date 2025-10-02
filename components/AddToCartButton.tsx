@@ -37,9 +37,14 @@ export default function AddToCartButton({
         price: product.salePrice,
         imageUrl: product.imageUrl,
       });
-    } catch (err: any) {
-      setError(err?.message || 'Failed to add item');
-      alert(err?.message || 'Failed to add item');
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message);
+        alert(err.message);
+      } else {
+        setError('Failed to add item');
+        alert('Failed to add item');
+      }
     } finally {
       setIsAdding(false);
     }

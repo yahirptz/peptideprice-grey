@@ -115,7 +115,7 @@ export default function ProductsPage() {
                 Each order must contain products from <strong>only ONE supplier</strong>. Mixing products from different suppliers will result in additional shipping charges.
               </p>
               <p className="text-orange-200 text-sm">
-                Check the supplier badge on each product before adding to cart. Complete one supplier's order before ordering from another.
+                Check the supplier badge on each product before adding to cart. Complete one supplier&apos;s order before ordering from another.
               </p>
             </div>
           </div>
