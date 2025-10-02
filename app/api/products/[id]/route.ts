@@ -3,33 +3,53 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
+// In Next.js 15, params is now a Promise
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const productId = parseInt(params.id);
+    // Await the params
+    const { id } = await params;
     
-    const product = await prisma.product.findUnique({
-      where: { id: productId },
-      include: {
-        supplier: {
-          select: {
-            id: true,
-            name: true,
-            shippingCostBase: true
-          }
-        }
-      }
+    const product = await prisma.product.findFirst({
+      where: {
+        OR: [
+          { id: parseInt(id) },
+          { slug: id }
+        ],
+        isActive: true,
+      },
+      select: {
+        id: true,
+        name: true,
+        slug: true,
+        description: true,
+        dosage: true,
+        category: true,
+        salePrice: true,
+        inStock: true,
+        stockQuantity: true,
+        imageUrl: true,
+      },
     });
 
     if (!product) {
-      return NextResponse.json({ error: 'Product not found' }, { status: 404 });
+      return NextResponse.json(
+        { error: 'Product not found' },
+        { status: 404 }
+      );
     }
 
-    return NextResponse.json(product);
+    return NextResponse.json({
+      ...product,
+      salePrice: Number(product.salePrice),
+    });
   } catch (error) {
-    console.error('Error fetching product:', error);
-    return NextResponse.json({ error: 'Failed to fetch product' }, { status: 500 });
+    console.error('Error loading product:', error);
+    return NextResponse.json(
+      { error: 'Failed to load product' },
+      { status: 500 }
+    );
   }
 }

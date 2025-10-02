@@ -4,67 +4,83 @@ import { ShoppingCart } from 'lucide-react';
 import { useCartStore } from '@/lib/cart-store';
 import { useState } from 'react';
 
-export interface Product {
-  id: number;
-  name: string;
-  slug: string;
-  dosage: string | null;
-  salePrice: number;
-  imageUrl?: string | null;
+interface AddToCartButtonProps {
+  product: {
+    id: number;
+    name: string;
+    slug: string;
+    dosage: string | null;
+    salePrice: number;
+    imageUrl?: string | null;
+    supplierId?: number | null;
+    supplierLabel?: string;
+  };
+  inStock: boolean;
 }
 
-export default function AddToCartButton({
-  product,
-  inStock,
-}: {
-  product: Product;
-  inStock: boolean;
-}) {
+export default function AddToCartButton({ product, inStock }: AddToCartButtonProps) {
   const addItem = useCartStore((state) => state.addItem);
+  const items = useCartStore((state) => state.items);
   const [isAdding, setIsAdding] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [showWarning, setShowWarning] = useState(false);
 
-  const handleAddToCart = async () => {
-    setIsAdding(true);
-    setError(null);
+  const handleAddToCart = () => {
+    if (!inStock) return;
 
-    try {
-      await addItem({
-        id: product.id,
-        name: product.name,
-        slug: product.slug,
-        dosage: product.dosage ?? '',
-        price: product.salePrice,
-        imageUrl: product.imageUrl,
-      });
-    } catch (err: unknown) {
-      if (err instanceof Error) {
-        setError(err.message);
-        alert(err.message);
-      } else {
-        setError('Failed to add item');
-        alert('Failed to add item');
+    // Check if cart has items from a different supplier
+    if (items.length > 0) {
+      const cartSupplier = items[0].supplierId;
+      if (cartSupplier !== product.supplierId) {
+        setShowWarning(true);
+        setTimeout(() => setShowWarning(false), 4000);
+        return;
       }
-    } finally {
-      setIsAdding(false);
     }
+
+    setIsAdding(true);
+    
+    addItem({
+      id: product.id,
+      name: product.name,
+      slug: product.slug,
+      dosage: product.dosage || '',
+      price: Number(product.salePrice),
+      imageUrl: product.imageUrl,
+      supplierId: product.supplierId,
+      supplierLabel: product.supplierLabel || 'Unknown',
+    });
+
+    // Show visual feedback
+    setTimeout(() => {
+      setIsAdding(false);
+    }, 500);
   };
 
-  return (
-    <>
+  if (showWarning) {
+    return (
       <button
-        onClick={handleAddToCart}
-        disabled={!inStock || isAdding}
-        className={`flex-1 py-2 px-4 rounded-lg text-sm font-semibold transition ${
-          !inStock || isAdding
-            ? 'bg-slate-600 text-slate-400 cursor-not-allowed'
-            : 'bg-white text-slate-900 hover:bg-slate-100'
-        }`}
+        disabled
+        className="flex-1 py-2 px-4 bg-red-500 text-white rounded-lg text-xs font-semibold cursor-not-allowed"
       >
-        <ShoppingCart className="h-4 w-4 inline mr-1" />
-        {isAdding ? 'Adding...' : 'Add to Cart'}
+        Different Supplier!
       </button>
-      {error && <div className="text-xs text-red-400 mt-1">{error}</div>}
-    </>
+    );
+  }
+
+  return (
+    <button
+      onClick={handleAddToCart}
+      disabled={!inStock}
+      className={`flex-1 py-2 px-4 rounded-lg text-sm font-semibold transition ${
+        inStock
+          ? isAdding
+            ? 'bg-green-500 text-white'
+            : 'bg-white text-slate-900 hover:bg-slate-100'
+          : 'bg-slate-700/50 text-slate-500 cursor-not-allowed'
+      }`}
+    >
+      <ShoppingCart className="h-4 w-4 inline mr-1" />
+      {isAdding ? 'Added!' : 'Add to Cart'}
+    </button>
   );
 }

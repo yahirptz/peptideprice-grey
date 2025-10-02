@@ -9,7 +9,18 @@ export async function GET() {
       where: {
         isActive: true,
       },
-      include: {
+      select: {
+        id: true,
+        name: true,
+        slug: true,
+        description: true,
+        dosage: true,
+        category: true,
+        salePrice: true,
+        inStock: true,
+        stockQuantity: true,
+        imageUrl: true,
+        supplierId: true,
         supplier: {
           select: {
             displayName: true,
@@ -25,6 +36,7 @@ export async function GET() {
       products.map((product) => ({
         ...product,
         salePrice: Number(product.salePrice),
+        supplierLabel: product.supplier?.displayName || 'Unknown',
       }))
     );
   } catch (error) {

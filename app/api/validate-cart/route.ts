@@ -18,7 +18,6 @@ export async function POST(request: Request) {
           select: {
             id: true,
             name: true,
-            displayName: true,
           },
         },
       },
@@ -28,7 +27,7 @@ export async function POST(request: Request) {
 
     if (supplierIds.length > 1) {
       const supplierNames = [
-        ...new Set(products.map((p) => p.supplier?.displayName || p.supplier?.name)),
+        ...new Set(products.map((p) => p.supplier?.name)),
       ];
       return NextResponse.json({
         valid: false,
