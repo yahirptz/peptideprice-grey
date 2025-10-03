@@ -8,12 +8,12 @@ export default function Home() {
       <nav className="border-b border-slate-700/50 bg-slate-900/50 backdrop-blur">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-2">
-              <div className="h-8 w-8 bg-gradient-to-br from-slate-500 to-slate-700 rounded-lg" />
+            <Link href="/" className="flex items-center space-x-2">
+              <img src="/logo.png" alt="PremiumPeptides" className="h-8 w-8 rounded-lg" />
               <span className="text-xl font-bold text-white">
                 PremiumPeptides
               </span>
-            </div>
+            </Link>
 
             <div className="flex items-center space-x-6">
               <Link href="/products" className="text-slate-300 hover:text-white transition">

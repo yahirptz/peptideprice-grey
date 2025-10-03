@@ -46,7 +46,7 @@ export default function SuppliesPage() {
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <Link href="/" className="flex items-center space-x-2">
-              <div className="h-8 w-8 bg-gradient-to-br from-slate-500 to-slate-700 rounded-lg" />
+              <img src="/logo.png" alt="PremiumPeptides" className="h-8 w-8 rounded-lg" />
               <span className="text-xl font-bold text-white">
                 PremiumPeptides
               </span>
@@ -109,7 +109,7 @@ export default function SuppliesPage() {
                 <h3 className="text-xl font-bold text-white mb-2">{supply.name}</h3>
                 <p className="text-slate-400 text-sm mb-6">{supply.description}</p>
                 
-                 <a href={supply.amazonLink}
+                  <a href={supply.amazonLink}
                   target="_blank"
                   rel="noopener noreferrer nofollow"
                   className="flex items-center justify-center gap-2 w-full py-3 px-4 bg-orange-600 hover:bg-orange-500 text-white rounded-lg font-semibold transition"

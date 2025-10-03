@@ -8,7 +8,7 @@ export default function AboutPage() {
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <Link href="/" className="flex items-center space-x-2">
-              <div className="h-8 w-8 bg-gradient-to-br from-slate-500 to-slate-700 rounded-lg" />
+              <img src="/logo.png" alt="PremiumPeptides" className="h-8 w-8 rounded-lg" />
               <span className="text-xl font-bold text-white">
                 PremiumPeptides
               </span>

@@ -6,12 +6,11 @@ import { ShoppingCart, FileText, Mail } from 'lucide-react';
 export default function COAPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
-      {/* Navigation */}
       <nav className="border-b border-slate-700/50 bg-slate-900/50 backdrop-blur sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <Link href="/" className="flex items-center space-x-2">
-              <div className="h-8 w-8 bg-gradient-to-br from-slate-500 to-slate-700 rounded-lg" />
+              <img src="/logo.png" alt="PremiumPeptides" className="h-8 w-8 rounded-lg" />
               <span className="text-xl font-bold text-white">
                 PremiumPeptides
               </span>
@@ -44,7 +43,6 @@ export default function COAPage() {
         </div>
       </nav>
 
-      {/* Header */}
       <div className="container mx-auto px-4 py-12">
         <div className="max-w-4xl mx-auto">
           <div className="mb-8">
@@ -56,7 +54,6 @@ export default function COAPage() {
             </p>
           </div>
 
-          {/* Main Content */}
           <div className="bg-slate-800/30 border border-slate-700/50 rounded-xl p-12 backdrop-blur text-center">
             <FileText className="h-20 w-20 text-slate-600 mx-auto mb-6" />
             
@@ -93,7 +90,6 @@ export default function COAPage() {
             </Link>
           </div>
 
-          {/* Info Section */}
           <div className="mt-8 bg-slate-800/50 border border-slate-700 rounded-xl p-6">
             <h3 className="text-lg font-bold text-white mb-3">What&apos;s Included in Our COAs</h3>
             <ul className="space-y-2 text-slate-300 text-sm">
@@ -107,7 +103,6 @@ export default function COAPage() {
         </div>
       </div>
 
-      {/* Footer */}
       <footer className="border-t border-slate-700/50 bg-slate-900/50 backdrop-blur mt-20">
         <div className="container mx-auto px-4 py-8">
           <div className="flex items-center justify-between text-slate-400 text-sm">
@@ -117,6 +112,7 @@ export default function COAPage() {
               <Link href="/coa" className="hover:text-white transition">COA</Link>
               <Link href="/reviews" className="hover:text-white transition">Reviews</Link>
               <Link href="/about" className="hover:text-white transition">About</Link>
+              <Link href="/terms" className="hover:text-white transition">Terms</Link>
             </div>
           </div>
         </div>
