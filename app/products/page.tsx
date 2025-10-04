@@ -6,6 +6,7 @@ import CartButton from '@/components/CartButton';
 import AddToCartButton from '@/components/AddToCartButton';
 import Image from 'next/image';
 import { Search, X, AlertCircle } from 'lucide-react';
+import { Analytics } from "@vercel/analytics/next"
 
 interface Product {
   id: number;
