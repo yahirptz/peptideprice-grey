@@ -3,14 +3,16 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { ShoppingBag, Wallet, DollarSign, AlertCircle } from 'lucide-react';
+import { ShoppingBag, Wallet, DollarSign, AlertCircle, Truck } from 'lucide-react';
 import { useCartStore } from '@/lib/cart-store';
 
 export default function CheckoutPage() {
   const router = useRouter();
   const items = useCartStore((state) => state.items);
   const clearCart = useCartStore((state) => state.clearCart);
-  const getTotalPrice = useCartStore((state) => state.getTotalPrice());
+  const getTotalPrice = useCartStore((state) => state.getTotalPrice);
+  const getShippingCost = useCartStore((state) => state.getShippingCost);
+  const getCartSupplier = useCartStore((state) => state.getCartSupplier);
 
   const [isProcessing, setIsProcessing] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState<'crypto' | 'wire'>('crypto');
@@ -28,9 +30,10 @@ export default function CheckoutPage() {
     shippingCountry: 'US',
   });
 
-  const subtotal = getTotalPrice;
-  const shipping = 15.0;
+  const subtotal = getTotalPrice();
+  const shipping = getShippingCost();
   const total = subtotal + shipping;
+  const supplier = getCartSupplier();
 
   const paymentAddresses = {
     crypto: 'bc1q386fzfnhgx6cajdflvqw63cngpk4g7nahmf23x',
@@ -144,7 +147,6 @@ export default function CheckoutPage() {
       <form onSubmit={handleSubmitOrder} className="container mx-auto px-4 py-8">
         <div className="grid lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2 space-y-6">
-            {/* LEGAL DISCLAIMERS */}
             <div className="bg-red-500/10 border-2 border-red-500/50 rounded-xl p-6 backdrop-blur">
               <div className="flex items-start gap-3 mb-4">
                 <AlertCircle className="h-6 w-6 text-red-400 flex-shrink-0 mt-1" />
@@ -206,7 +208,6 @@ export default function CheckoutPage() {
               </div>
             </div>
 
-            {/* CUSTOMER INFO */}
             <div className="bg-slate-800/30 border border-slate-700/50 rounded-xl p-6 backdrop-blur">
               <h2 className="text-2xl font-bold text-white mb-4">Customer Information</h2>
               <div className="grid md:grid-cols-2 gap-4">
@@ -235,7 +236,6 @@ export default function CheckoutPage() {
               </div>
             </div>
 
-            {/* SHIPPING INFO */}
             <div className="bg-slate-800/30 border border-slate-700/50 rounded-xl p-6 backdrop-blur">
               <h2 className="text-2xl font-bold text-white mb-4">Shipping Address</h2>
               <div className="space-y-4">
@@ -288,7 +288,6 @@ export default function CheckoutPage() {
               </div>
             </div>
 
-            {/* PAYMENT METHOD */}
             <div className="bg-slate-800/30 border border-slate-700/50 rounded-xl p-6 backdrop-blur">
               <h2 className="text-2xl font-bold text-white mb-4 flex items-center gap-2">
                 <Wallet className="h-6 w-6" />
@@ -340,7 +339,6 @@ export default function CheckoutPage() {
                 </div>
               )}
 
-              {/* Payment Instructions / Address with Crypto Guide Link */}
               <div className="bg-slate-900/50 rounded-lg p-4">
                 <p className="text-slate-300 text-sm mb-2">
                   <strong>Payment {paymentMethod === 'wire' ? 'Instructions' : 'Address'}:</strong>
@@ -360,10 +358,19 @@ export default function CheckoutPage() {
             </div>
           </div>
 
-          {/* ORDER SUMMARY */}
           <div className="lg:col-span-1">
             <div className="bg-slate-800/30 border border-slate-700/50 rounded-xl p-6 backdrop-blur sticky top-24">
               <h2 className="text-xl font-bold text-white mb-6">Order Summary</h2>
+              
+              {supplier && (
+                <div className="mb-4 p-3 bg-blue-500/10 border border-blue-500/50 rounded-lg">
+                  <div className="flex items-center gap-2 text-blue-200 text-sm">
+                    <Truck className="h-4 w-4" />
+                    <span>Shipping from <strong>{supplier.label}</strong></span>
+                  </div>
+                </div>
+              )}
+
               <div className="space-y-3 mb-6">
                 {items.map((item) => (
                   <div key={item.id} className="flex justify-between text-sm">
@@ -383,7 +390,10 @@ export default function CheckoutPage() {
                   <span>${subtotal.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between text-slate-400">
-                  <span>Shipping</span>
+                  <div className="flex items-center gap-2">
+                    <Truck className="h-4 w-4" />
+                    <span>Shipping</span>
+                  </div>
                   <span>${shipping.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between text-white font-bold text-lg pt-2 border-t border-slate-700">

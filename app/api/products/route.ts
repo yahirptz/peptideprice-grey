@@ -24,6 +24,7 @@ export async function GET() {
         supplier: {
           select: {
             displayName: true,
+            shippingCostBase: true,
           },
         },
       },
@@ -37,6 +38,7 @@ export async function GET() {
         ...product,
         salePrice: Number(product.salePrice),
         supplierLabel: product.supplier?.displayName || 'Unknown',
+        supplierShippingCost: Number(product.supplier?.shippingCostBase || 0),
       }))
     );
   } catch (error) {

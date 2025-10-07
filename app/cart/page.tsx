@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useCartStore } from '@/lib/cart-store';
-import { Trash2, Plus, Minus, ShoppingCart } from 'lucide-react';
+import { Trash2, Plus, Minus, ShoppingCart, Truck } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
 export default function CartPage() {
@@ -11,10 +11,14 @@ export default function CartPage() {
   const removeItem = useCartStore((state) => state.removeItem);
   const updateQuantity = useCartStore((state) => state.updateQuantity);
   const clearCart = useCartStore((state) => state.clearCart);
-  const getTotalPrice = useCartStore((state) => state.getTotalPrice());
+  const getTotalPrice = useCartStore((state) => state.getTotalPrice);
+  const getShippingCost = useCartStore((state) => state.getShippingCost);
+  const getCartSupplier = useCartStore((state) => state.getCartSupplier);
 
-  const shipping = 15.00;
-  const total = getTotalPrice + shipping;
+  const subtotal = getTotalPrice();
+  const shipping = getShippingCost();
+  const total = subtotal + shipping;
+  const supplier = getCartSupplier();
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
@@ -72,6 +76,17 @@ export default function CartPage() {
         ) : (
           <div className="grid lg:grid-cols-3 gap-8">
             <div className="lg:col-span-2 space-y-4">
+              {supplier && (
+                <div className="bg-blue-500/10 border border-blue-500/50 rounded-xl p-4 backdrop-blur flex items-center gap-3">
+                  <Truck className="h-5 w-5 text-blue-400" />
+                  <div className="flex-1">
+                    <p className="text-blue-200 text-sm">
+                      <strong>Shipping from {supplier.label}</strong> - All items from this supplier will ship together
+                    </p>
+                  </div>
+                </div>
+              )}
+
               {items.map((item) => (
                 <div
                   key={item.id}
@@ -142,13 +157,21 @@ export default function CartPage() {
 
                 <div className="space-y-3 mb-6">
                   <div className="flex justify-between text-slate-400">
-                    <span>Subtotal</span>
-                    <span>${getTotalPrice.toFixed(2)}</span>
+                    <span>Subtotal ({items.length} item{items.length !== 1 ? 's' : ''})</span>
+                    <span>${subtotal.toFixed(2)}</span>
                   </div>
                   <div className="flex justify-between text-slate-400">
-                    <span>Shipping</span>
+                    <div className="flex items-center gap-2">
+                      <Truck className="h-4 w-4" />
+                      <span>Shipping</span>
+                    </div>
                     <span>${shipping.toFixed(2)}</span>
                   </div>
+                  {supplier && (
+                    <p className="text-xs text-slate-500 italic">
+                      {supplier.label} ships for ${shipping.toFixed(2)} flat rate
+                    </p>
+                  )}
                   <div className="border-t border-slate-700 pt-3 flex justify-between text-white font-bold text-lg">
                     <span>Total</span>
                     <span>${total.toFixed(2)}</span>

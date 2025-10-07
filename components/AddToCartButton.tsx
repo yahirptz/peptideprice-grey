@@ -14,6 +14,7 @@ interface AddToCartButtonProps {
     imageUrl?: string | null;
     supplierId?: number | null;
     supplierLabel?: string;
+    supplierShippingCost?: number; // ← ADDED THIS
   };
   inStock: boolean;
 }
@@ -48,6 +49,7 @@ export default function AddToCartButton({ product, inStock }: AddToCartButtonPro
       imageUrl: product.imageUrl,
       supplierId: product.supplierId,
       supplierLabel: product.supplierLabel || 'Unknown',
+      supplierShippingCost: product.supplierShippingCost || 0, // ← ADDED THIS
     });
 
     // Show visual feedback

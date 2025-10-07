@@ -14,11 +14,13 @@ async function sendTelegramNotification(order: {
   orderNumber: string;
   customerName: string;
   customerEmail: string;
+  subtotal: number;
+  shipping: number;
   total: number;
   profit: number;
   totalCost: number;
   paymentMethod: string;
-  items: Array<{ productName: string; quantity: number }>;
+  items: Array<{ productName: string; quantity: number; unitPrice: number }>;
   supplierName: string;
   shippingAddress: string;
   shippingCity: string;
@@ -36,9 +38,12 @@ async function sendTelegramNotification(order: {
 🆕 *NEW ORDER RECEIVED*
 
 📦 Order: \`${order.orderNumber}\`
-💰 Total: $${order.total.toFixed(2)}
-💵 Cost: $${order.totalCost.toFixed(2)}
-✨ Profit: $${order.profit.toFixed(2)}
+💰 Total: ${order.total.toFixed(2)}
+  ├─ Subtotal: ${order.subtotal.toFixed(2)}
+  └─ Shipping: ${order.shipping.toFixed(2)}
+
+💵 Cost: ${order.totalCost.toFixed(2)}
+✨ Profit: ${order.profit.toFixed(2)}
 💳 Payment: ${order.paymentMethod?.toUpperCase() || 'N/A'}
 
 🏭 *SUPPLIER TO CONTACT*
@@ -53,7 +58,7 @@ ${order.shippingAddress}
 ${order.shippingCity}, ${order.shippingState} ${order.shippingZip}
 
 📋 *Items*
-${order.items.map(item => `• ${item.productName} (x${item.quantity})`).join('\n')}
+${order.items.map(item => `• ${item.productName} x${item.quantity} @ ${item.unitPrice.toFixed(2)}`).join('\n')}
 
 ⚠️ *Customer must include order number in payment note:*
 \`${order.orderNumber}\`
@@ -88,7 +93,8 @@ export async function POST(request: NextRequest) {
 
     const orderNumber = generateSecureOrderNumber();
 
-    let totalCost = 0;
+    let productCost = 0;
+    let supplierShippingCost = 0;
     let supplierId: number | null = null;
     let supplierName = '';
     const orderItems = [];
@@ -101,6 +107,7 @@ export async function POST(request: NextRequest) {
             select: {
               id: true,
               name: true,
+              shippingCostBase: true,
             },
           },
         },
@@ -113,10 +120,11 @@ export async function POST(request: NextRequest) {
       if (supplierId === null && product.supplierId) {
         supplierId = product.supplierId;
         supplierName = product.supplier?.name || 'Unknown';
+        supplierShippingCost = Number(product.supplier?.shippingCostBase || 0);
       }
 
-      const unitCost = Number(product.baseCost) + Number(product.shippingCost);
-      totalCost += unitCost * item.quantity;
+      const unitCost = Number(product.baseCost);
+      productCost += unitCost * item.quantity;
 
       orderItems.push({
         productId: item.id,
@@ -128,6 +136,7 @@ export async function POST(request: NextRequest) {
       });
     }
 
+    const totalCost = productCost + supplierShippingCost;
     const profit = total - totalCost;
 
     const order = await prisma.order.create({
@@ -163,6 +172,8 @@ export async function POST(request: NextRequest) {
       orderNumber: order.orderNumber,
       customerName: order.customerName || '',
       customerEmail: order.customerEmail,
+      subtotal: Number(order.subtotal),
+      shipping: Number(order.shippingCharged),
       total: Number(order.total),
       profit: Number(order.profit),
       totalCost: Number(order.totalCost),
@@ -175,6 +186,7 @@ export async function POST(request: NextRequest) {
       items: orderItems.map(item => ({
         productName: item.productName,
         quantity: item.quantity,
+        unitPrice: item.unitPrice,
       })),
     });
 

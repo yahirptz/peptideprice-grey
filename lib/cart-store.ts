@@ -11,6 +11,13 @@ export interface CartItem {
   imageUrl?: string | null;
   supplierId?: number | null;
   supplierLabel?: string;
+  supplierShippingCost?: number;
+}
+
+interface CartSupplier {
+  id: number | null;
+  label: string | null;
+  shippingCost: number;
 }
 
 interface CartStore {
@@ -21,7 +28,8 @@ interface CartStore {
   clearCart: () => void;
   getTotalItems: () => number;
   getTotalPrice: () => number;
-  getCartSupplier: () => string | null;
+  getCartSupplier: () => CartSupplier | null;
+  getShippingCost: () => number;
 }
 
 export const useCartStore = create<CartStore>()(
@@ -34,14 +42,12 @@ export const useCartStore = create<CartStore>()(
           const existingItem = state.items.find((i) => i.id === item.id);
           
           if (existingItem) {
-            // Item already in cart, increase quantity
             return {
               items: state.items.map((i) =>
                 i.id === item.id ? { ...i, quantity: i.quantity + 1 } : i
               ),
             };
           } else {
-            // New item, add to cart
             return {
               items: [...state.items, { ...item, quantity: 1 }],
             };
@@ -86,11 +92,21 @@ export const useCartStore = create<CartStore>()(
       getCartSupplier: () => {
         const items = get().items;
         if (items.length === 0) return null;
-        return items[0].supplierLabel || null;
+        
+        return {
+          id: items[0].supplierId || null,
+          label: items[0].supplierLabel || null,
+          shippingCost: items[0].supplierShippingCost || 0
+        };
+      },
+
+      getShippingCost: () => {
+        const supplier = get().getCartSupplier();
+        return supplier?.shippingCost || 0;
       },
     }),
     {
-      name: 'cart-storage', // localStorage key
+      name: 'cart-storage',
     }
   )
 );
