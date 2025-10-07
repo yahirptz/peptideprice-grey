@@ -50,7 +50,8 @@ export default function AboutPage() {
               <p className="leading-relaxed">
                 PremiumPeptides is your trusted source for research-grade peptides at competitive prices. 
                 We bridge the gap between premium quality and affordability where everyone should have the same opportunity to research their peptides, sourcing directly from vetted suppliers 
-                to bring you the best prices on the market.
+                to bring you the best prices on the market. Our brand is established on a Chrisitan/Catholic foundation,
+                emphasizing integrity, transparency, and customer-centric values in all we do.
               </p>
             </div>
 
