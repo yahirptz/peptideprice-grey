@@ -33,7 +33,7 @@ export default function FAQPage() {
         },
         {
           q: "Do you ship internationally?",
-          a: "Currently, we only ship within the United States. International shipping may become available in the future."
+          a: "Yes we do ship internationally. However, international shipments may be subject to customs inspections and delays. It is the buyer's responsibility to understand and comply with all import regulations in their country."
         },
         {
           q: "What if my package is lost or damaged?",
