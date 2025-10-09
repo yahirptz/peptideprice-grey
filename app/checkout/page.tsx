@@ -343,16 +343,35 @@ export default function CheckoutPage() {
                 <p className="text-slate-300 text-sm mb-2">
                   <strong>Payment {paymentMethod === 'wire' ? 'Instructions' : 'Address'}:</strong>
                 </p>
-                <p className="font-mono text-white break-all text-sm mb-3">
-                  {paymentAddresses[paymentMethod]}
-                </p>
-                {paymentMethod === 'crypto' && (
-                  <Link
-                    href="/crypto-guide"
-                    className="text-blue-400 hover:text-blue-300 text-sm underline"
-                  >
-                    New to crypto? Click here for step-by-step instructions →
-                  </Link>
+                
+                {paymentMethod === 'crypto' ? (
+                  <>
+                    {/* QR Code */}
+                    <div className="flex justify-center my-4">
+                      <img 
+                        src="/bitcoin-qr.png.jpeg" 
+                        alt="Bitcoin Payment QR Code" 
+                        className="w-48 h-48 border-4 border-white rounded-lg"
+                      />
+                    </div>
+                    
+                    {/* Text Address */}
+                    <p className="text-center text-xs text-slate-400 mb-2">Or copy address:</p>
+                    <p className="font-mono text-white break-all text-sm mb-3 text-center bg-slate-800 p-3 rounded">
+                      {paymentAddresses.crypto}
+                    </p>
+                    
+                    <Link
+                      href="/crypto-guide"
+                      className="block text-center text-blue-400 hover:text-blue-300 text-sm underline mt-3"
+                    >
+                      New to crypto? Click here for step-by-step instructions →
+                    </Link>
+                  </>
+                ) : (
+                  <p className="font-mono text-white break-all text-sm mb-3">
+                    {paymentAddresses.wire}
+                  </p>
                 )}
               </div>
             </div>
