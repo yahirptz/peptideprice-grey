@@ -36,7 +36,7 @@ export default function CheckoutPage() {
   const supplier = getCartSupplier();
 
   const paymentAddresses = {
-    crypto: 'bc1q386fzfnhgx6cajdflvqw63cngpk4g7nahmf23x',
+    crypto: 'bc1q0sen8c0an60ft06rpeqwh9c4vrznu4x2e4fd2c',
     wire: 'Contact us for wire transfer instructions after placing order',
   };
 
