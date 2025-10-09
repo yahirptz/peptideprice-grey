@@ -351,7 +351,7 @@ export default function CheckoutPage() {
                       <img 
                         src="/bitcoin-qr.png.jpeg" 
                         alt="Bitcoin Payment QR Code" 
-                        className="w-48 h-48 border-4 border-white rounded-lg"
+                        className="w-64 h-64 border-4 border-white rounded-lg"
                       />
                     </div>
                     
