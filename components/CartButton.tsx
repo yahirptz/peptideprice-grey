@@ -5,7 +5,11 @@ import { ShoppingCart } from 'lucide-react';
 import { useCartStore } from '@/lib/cart-store';
 
 export default function CartButton() {
-  const totalItems = useCartStore((state) => state.getTotalItems());
+  // Subscribe to items directly so component re-renders when cart changes
+  const items = useCartStore((state) => state.items);
+  
+  // Calculate total items from the items array
+  const totalItems = items.reduce((total, item) => total + item.quantity, 0);
 
   return (
     <Link 

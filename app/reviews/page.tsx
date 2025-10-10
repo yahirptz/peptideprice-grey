@@ -18,6 +18,9 @@ export default function ReviewsPage() {
               <Link href="/products" className="text-slate-300 hover:text-white transition">
                 Products
               </Link>
+              <Link href="/starter-kits" className="text-slate-300 hover:text-white transition">
+                Starter Kits
+              </Link>
               <Link href="/coa" className="text-slate-300 hover:text-white transition">
                 COA
               </Link>
